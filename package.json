@@ -1,0 +1,49 @@
+{
+  "name": "reaction-mollie",
+  "version": "1.0.0",
+  "description": "Mollie plugin for Reaction Commerce",
+  "main": "register.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mollie",
+    "payment",
+    "service",
+    "ideal",
+    "creditcard",
+    "mistercash",
+    "bancontact",
+    "sofort",
+    "sofortbanking",
+    "sepa",
+    "bitcoin",
+    "paypal",
+    "paysafecard",
+    "podiumcadeaukaart",
+    "banktransfer",
+    "direct debit",
+    "belfius",
+    "belfius direct net",
+    "refunds",
+    "api",
+    "payments",
+    "gateway",
+    "subscriptions",
+    "recurring",
+    "charges",
+    "kbc",
+    "cbc",
+    "gift cards",
+    "intersolve",
+    "fashioncheque",
+    "inghomepay"
+  ],
+  "author": "Mollie B.V. <info@mollie.com> (https://www.mollie.com/)",
+  "contributors": [
+    "Michael Dekker <michael@snowycatsoftware.com> (https://github.com/firstred)",
+    "Martijn Diederiks <martijn@snowycatsoftware.com> (https://github.com/snowycatsoftware)"
+  ],
+  "license": "GPL-3.0",
+  "private": true
+}

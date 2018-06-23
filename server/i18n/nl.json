@@ -1,0 +1,18 @@
+[{
+  "language": "Dutch",
+  "i18n": "nl",
+  "ns": "mollie",
+  "translation": {
+    "mollie": {
+      "settings": {
+        "apiKeyMissing": "API key ontbreekt",
+        "enterYourApiKey": "Voer uw API Key in om deze plugin te activeren"
+      }
+    },
+    "admin": {
+      "paymentSettings": {
+        "mollieLabel": "Mollie"
+      }
+    }
+  }
+}]
