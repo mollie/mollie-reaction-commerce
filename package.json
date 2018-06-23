@@ -1,5 +1,5 @@
 {
-  "name": "reaction-mollie",
+  "name": "mollie-reaction",
   "version": "1.0.0",
   "description": "Mollie plugin for Reaction Commerce",
   "main": "register.js",
