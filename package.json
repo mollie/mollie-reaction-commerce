@@ -45,7 +45,7 @@
     "shx": "^0.3.0"
   },
   "scripts": {
-    "postinstall": "shx ln -s ../imports/plugins/custom/mollie-reaction/ node_modules/mollie-reaction/"
+    "postinstall": "mkdir -p ../imports/plugins/custom/mollie-reaction && shx ln -s ../imports/plugins/custom/mollie-reaction/ node_modules/mollie-reaction/"
   },
   "license": "GPL-3.0",
   "eslintConfig": {
