@@ -44,6 +44,17 @@
     "Michael Dekker <michael@snowycatsoftware.com> (https://github.com/firstred)",
     "Martijn Diederiks <martijn@snowycatsoftware.com> (https://github.com/snowycatsoftware)"
   ],
+  "dependencies": {
+    "load-script": "^1.0.0"
+  },
   "license": "GPL-3.0",
-  "private": true
+  "eslintConfig": {
+    "extends": "@reactioncommerce",
+    "globals": {
+      "Assets": true,
+      "Package": true,
+      "FS": true,
+      "Alerts": true
+    }
+  }
 }
