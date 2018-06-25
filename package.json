@@ -42,8 +42,7 @@
     "Martijn Diederiks <martijn@snowycatsoftware.com> (https://github.com/snowycatsoftware)"
   ],
   "dependencies": {
-    "mollie-api-node": "git://github.com/mollie/mollie-api-node.git#v2.0.0-rc.1",
-    "shx": "^0.3.0"
+    "mollie-api-node": "git://github.com/mollie/mollie-api-node.git#v2.0.0-rc.1"
   },
   "license": "GPL-3.0",
   "eslintConfig": {
