@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { TextField, Translation } from "/imports/plugins/core/ui/client/components";
+import _ from 'lodash';
 
 class MollieSettingsForm extends Component {
   static propTypes = {
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
     settings: PropTypes.object,
+    initialSettings: PropTypes.object,
   };
 
   static defaultProps = {
@@ -15,30 +17,23 @@ class MollieSettingsForm extends Component {
     },
   };
 
-  state = {
-    settings: {
-      apiKey: this.props.settings.apiKey,
-    },
-  };
-
-  handleStateChange = (e) => {
-    const { settings } = this.state;
-    settings[e.target.name] = e.target.value;
-    this.setState({ settings });
-  };
+  componentWillReceiveProps(nextProps) {
+    if (!_.isEqual(this.props.settings, nextProps.settings)) {
+      this.forceUpdate();
+    }
+  }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    return this.props.onSubmit(this.state.settings);
+    this.props.onSubmit(e);
   };
 
   render() {
-    const { settings } = this.props;
-    const setting = this.state.settings;
+    const { settings, initialSettings } = this.props;
 
     return (
       <div>
-        { !settings.apiKey &&
+        { !initialSettings.apiKey &&
           <div className="alert alert-info">
             <Translation defaultValue="Enter your API Key to begin using this plugin" i18nKey="mollie.settings.enterYourApiKey"/>
           </div>
@@ -49,8 +44,8 @@ class MollieSettingsForm extends Component {
             label="API Key"
             name="apiKey"
             type="text"
-            onChange={this.handleStateChange}
-            value={setting.apiKey}
+            onChange={this.props.onChange}
+            value={settings.apiKey}
           />
 
           <button className="btn btn-primary pull-right" type="submit">

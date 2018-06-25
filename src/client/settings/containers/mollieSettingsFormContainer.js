@@ -5,10 +5,12 @@ import { Meteor } from "meteor/meteor";
 import { Packages } from "/lib/collections";
 import { Reaction, i18next } from "/client/api";
 import { MollieSettingsForm } from "../components";
+import { NAME } from '../../../misc/consts';
+import _ from "lodash";
 
 class MollieSettingsFormContainer extends Component {
   state = {
-    apiKey: "",
+    apiKey: _.get(this.props, `packageData.settings.${NAME}.apiKey`, ''),
   };
 
   static propTypes = {
@@ -16,23 +18,23 @@ class MollieSettingsFormContainer extends Component {
   };
 
   handleChange = (e) => {
-    e.preventDefault();
     this.setState({ apiKey: e.target.value });
   };
 
-  handleSubmit = (settings) => {
-    const packageId = this.props.packageData._id;
-    const { settingsKey } = this.props.packageData.registry[0];
+  handleSubmit = () => {
+    console.log(this.props.packageData);
+    const { apiKey } = _.cloneDeep(this.state);
+    const { _id: packageId } = _.get(this.props, 'packageData', { _id: false });
+    if (!packageId) {
+      return Alerts.toast(i18next.t("admin.settings.saveFailed"), "error");
+    }
 
     const fields = [{
       property: "apiKey",
-      value: settings.apiKey
-    }, {
-      property: "support",
-      value: settings.support
+      value: apiKey,
     }];
 
-    this.saveUpdate(fields, packageId, settingsKey);
+    this.saveUpdate(fields, packageId, NAME);
   };
 
   saveUpdate = (fields, id, settingsKey) => {
@@ -49,7 +51,8 @@ class MollieSettingsFormContainer extends Component {
       <MollieSettingsForm
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
-        settings={this.props.packageData.settings}
+        initialSettings={this.props.packageData.settings}
+        settings={_.pick(this.state, ['apiKey'])}
       />
     );
   }

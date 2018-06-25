@@ -7,20 +7,7 @@ Reaction.registerPackage({
   icon: "fa fa-credit-card-alt",
   autoEnable: true,
   settings: {
-    "mode": false,
-    "api_key": "",
-    "mollie": {
-      enabled: false,
-      support: [
-        "Authorize",
-        "Capture",
-        "Refund",
-      ],
-    },
-    "public": {
-      api_key: "",
-    },
-    "connectAuth": {},
+    "apiKey": "",
   },
   registry: [
     // Settings panel
@@ -37,5 +24,11 @@ Reaction.registerPackage({
       provides: ["paymentMethod"],
       icon: "fa fa-credit-card-alt",
     },
+    {
+      route:"/mollie/ideal",
+      name:"mollieIdeal",
+      template:"mollieIdeal",
+      workflow:"coreWorkflow"
+    }
   ],
 });
