@@ -7,7 +7,8 @@ Reaction.registerPackage({
   icon: "fa fa-credit-card-alt",
   autoEnable: true,
   settings: {
-    "apiKey": "",
+    apiKey: "",
+    methods: [],
   },
   registry: [
     // Settings panel
@@ -29,6 +30,6 @@ Reaction.registerPackage({
       name:"mollieIdeal",
       template:"mollieIdeal",
       workflow:"coreWorkflow"
-    }
+    },
   ],
 });
