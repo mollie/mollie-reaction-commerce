@@ -1,11 +1,11 @@
 import { Template } from "meteor/templating";
-import { MollieIdealContainer } from "../containers";
+import MolliePaymentContainer from "../containers/MolliePaymentContainer";
 import "./ideal.html";
 
 Template.mollieIdeal.helpers({
   MollieIdeal() {
     return {
-      component: MollieIdealContainer
+      component: MolliePaymentContainer
     };
   }
 });

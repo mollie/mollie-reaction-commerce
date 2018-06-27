@@ -1,5 +1,5 @@
 import "./security/policy";
-import "./methods/mollie";
+import "./methods";
+import "./publish";
+import "./routes";
 import "./i18n";
-
-export * from "./methods/mollieapi";
