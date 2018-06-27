@@ -22,7 +22,12 @@ class MolliePaymentSelector extends Component {
     return (
       <div>
         {_.filter(this.state.methods, item => item.enabled).map((method) => (
-          <a className="rui btn btn-lg btn-default btn-block" style={{ display: "block", height: "60px" }} key={method.name}>
+          <a
+            className="rui btn btn-lg btn-default btn-block"
+            style={{ display: "block", height: "60px" }}
+            key={method.name}
+            href={Router.pathFor(`/mollie/payment?method=${method._id}`)}
+          >
             <div style={{ textAlign: "left", marginRight: "20px", overflow: "hidden", textOverflow: "ellipsis" }}>
               <img src={`https://www.mollie.com/images/payscreen/methods/${method._id}.png`} style={{ display: "inline" }}/>
               <strong style={{ display: "inline" }}>
