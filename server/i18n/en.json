@@ -6,7 +6,8 @@
     "mollie": {
       "settings": {
         "apiKeyMissing": "API Key is Missing",
-        "enterYourApiKey": "Enter your API Key to begin using this plugin"
+        "noPaymentMethodsFound": "No payment methods found. Make sure the API key is correct and that you have enabled at least one payment method.",
+        "paymentMethods": "Payment Methods"
       }
     },
     "admin": {

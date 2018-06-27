@@ -47,16 +47,9 @@ class MollieSettingsForm extends Component {
   };
 
   render() {
-    const { initialSettings, settings: { apiKey, methods } } = this.props;
-
+    const { settings: { apiKey, methods } } = this.props;
     return (
       <div>
-        { !initialSettings.apiKey &&
-          <div className="alert alert-info">
-            <Translation defaultValue="Enter your API Key to begin using this plugin" i18nKey="mollie.settings.enterYourApiKey"/>
-          </div>
-        }
-
         <form onSubmit={this.handleSubmit}>
           <TextField
             label="API Key"
@@ -67,7 +60,7 @@ class MollieSettingsForm extends Component {
           />
 
           <MolliePaymentTagList
-            label="Payment Methods"
+            label=<Translation defaultValue="Payment Methods" i18nKey="mollie.settings.paymentMethods"/>
             onChange={this.onMethodsChange}
             methods={methods}
           />
