@@ -8,6 +8,9 @@
         "apiKeyMissing": "API Key is Missing",
         "noPaymentMethodsFound": "No payment methods found. Make sure the API key is correct and that you have enabled at least one payment method.",
         "paymentMethods": "Payment Methods"
+      },
+      "payment": {
+        "paymentInitError": "An error occurred while initializing the payment. Please contact our customer service."
       }
     },
     "admin": {

@@ -3,6 +3,7 @@ import { check } from "meteor/check";
 import { Tracker } from "meteor/tracker";
 import { registerSchema } from "@reactioncommerce/schemas";
 import { createdAtAutoValue, updatedAtAutoValue } from "/imports/collections/schemas/helpers";
+import { Mongo } from "meteor/mongo";
 
 /**
  * @name MolliePayment
@@ -10,7 +11,7 @@ import { createdAtAutoValue, updatedAtAutoValue } from "/imports/collections/sch
  * @type {SimpleSchema}
  * @summary MolliePayment schema
  */
-export const MolliePaymentsSchema = new SimpleSchema({
+export const MollieQrCodesSchema = new SimpleSchema({
   transactionId: {
     type: String,
     label: "Transaction ID"
@@ -19,23 +20,24 @@ export const MolliePaymentsSchema = new SimpleSchema({
     type: String,
     label: "Cart ID"
   },
-  orderId: {
-    type: String,
-    label: "Order ID",
-    optional: true,
+  amount: {
+    type: Number,
+    label: "Amount"
   },
   method: {
     type: String,
-    label: "Payment Method"
+    label: "Payment Method",
   },
-  bankStatus: {
+  imageUrl: {
     type: String,
-    max: 4,
-    label: "Bank Status"
+    label: "Image URL",
+  },
+  expiresAt: {
+    type: Date,
   },
   createdAt: {
     type: Date,
-    autoValue: createdAtAutoValue,
+    autoValue: createdAtAutoValue
   },
   updatedAt: {
     type: Date,
@@ -44,4 +46,4 @@ export const MolliePaymentsSchema = new SimpleSchema({
   },
 }, { check, tracker: Tracker });
 
-registerSchema("MolliePayments", MolliePaymentsSchema);
+registerSchema("MollieQrCodes", MollieQrCodesSchema);

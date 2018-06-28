@@ -8,6 +8,9 @@
         "apiKeyMissing": "API key ontbreekt",
         "noPaymentMethodsFound": "Geen betaalmethoden gevonden. Zorg ervoor dat de API-key juist is en u minstens één betaalmethode heeft ingeschakeld.",
         "paymentMethods": "Betaalmethoden"
+      },
+      "payment": {
+        "paymentInitError": "Er is een fout opgetreden bij het initialiseren van de betaling."
       }
     },
     "admin": {

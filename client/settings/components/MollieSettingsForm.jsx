@@ -60,7 +60,7 @@ class MollieSettingsForm extends Component {
           />
 
           <MolliePaymentTagList
-            label=<Translation defaultValue="Payment Methods" i18nKey="mollie.settings.paymentMethods"/>
+            label="Payment Methods"
             onChange={this.onMethodsChange}
             methods={methods}
           />

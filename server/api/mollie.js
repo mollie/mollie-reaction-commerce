@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 import { Reaction } from "/server/api";
-import Mollie from "../../lib/api/src/mollie";
+import Mollie from "../lib/api/src/mollie";
 import { NAME } from "../../misc/consts";
 import { Packages } from "/lib/collections";
 

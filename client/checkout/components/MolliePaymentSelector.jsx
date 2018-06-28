@@ -1,5 +1,10 @@
+import { Meteor } from "meteor/meteor";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
+
+import { getSupportedMethods } from "../../../misc/paymentmethods";
+import { Shops } from "../../../../../../../lib/collections";
 
 class MolliePaymentSelector extends Component {
   state = {
@@ -18,15 +23,31 @@ class MolliePaymentSelector extends Component {
     }
   }
 
+  static initPayment(method) {
+    Meteor.call("mollie/payment/create", method, (error, result) => {
+      if (error || typeof result !== 'string') {
+        Alerts.inline("An error occurred while initializing the payment. Please contact our customer service.", "error", {
+          placement: "paymentMethod",
+          i18nKey: "mollie.payment.paymentInitError",
+          autoHide: 10000,
+        });
+      } else {
+        window.location.href = result;
+      }
+    });
+  }
+
   render() {
+    const availableMethods = getSupportedMethods(Shops.findOne().currency);
+
     return (
       <div>
-        {_.filter(this.state.methods, item => item.enabled).map((method) => (
+        {_.filter(this.state.methods, item => item.enabled && _.includes(availableMethods, item._id)).map((method) => (
           <a
             className="rui btn btn-lg btn-default btn-block"
             style={{ display: "block", height: "60px" }}
             key={method.name}
-            href={Router.pathFor(`/mollie/payment?method=${method._id}`)}
+            onClick={() => this.constructor.initPayment(method._id)}
           >
             <div style={{ textAlign: "left", marginRight: "20px", overflow: "hidden", textOverflow: "ellipsis" }}>
               <img src={`https://www.mollie.com/images/payscreen/methods/${method._id}.png`} style={{ display: "inline" }}/>

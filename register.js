@@ -25,11 +25,5 @@ Reaction.registerPackage({
       provides: ["paymentMethod"],
       icon: "fa fa-credit-card-alt",
     },
-    {
-      route:"/mollie/ideal",
-      name:"mollieIdeal",
-      template:"mollieIdeal",
-      workflow:"coreWorkflow"
-    },
   ],
 });

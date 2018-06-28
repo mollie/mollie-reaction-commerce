@@ -25,8 +25,8 @@ const processPayment = (req, res) => {
   const paymentInfo = {
     amount: cart.getTotal(),
     description: `Cart ${cart._id}`,
-    redirectUrl: `${Meteor.absoluteUrl()}mollie/return`,
-    // webhookUrl: `${Meteor.absoluteUrl()}mollie/webhook`,
+    redirectUrl: `${Meteor.absoluteUrl()}/mollie/return`,
+    webhookUrl: `${Meteor.absoluteUrl()}/mollie/webhook`,
   };
   if (_.has(req.params, "method")) {
     paymentInfo.method = req.params.method;
