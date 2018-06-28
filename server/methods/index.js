@@ -4,12 +4,13 @@ import { check, Match } from "meteor/check";
 import util from "util";
 import _ from "lodash";
 
-import { Cart } from "/lib/collections";
-import { MolliePayments } from "../collections";
+import { Reaction, Logger } from "/server/api";
+import { Cart, Packages, Shops } from "/lib/collections";
 
-import mollie from "../api/mollie";
-import { Logger, Reaction } from "/server/api";
-import { Shops } from "../../../../../../lib/collections";
+import { MolliePayments } from "../collections";
+import { NAME } from "../../misc/consts";
+import Mollie from "../lib/api/src/mollie";
+import { ValidCardNumber, ValidCVV, ValidExpireMonth, ValidExpireYear } from "../../../../../../lib/api";
 
 /**
  * Meteor methods for the Mollie Plugin. Run these methods using `Meteor.call()`
@@ -23,38 +24,58 @@ Meteor.methods({
     check(fields, Match.Any);
 
     return await new Promise((resolve, reject) => {
+      const process = () => {
+        Meteor.call("registry/update", id, settingsKey, fields, (err) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve();
+        });
+      };
+
       // Grab the payment methods from the list that is going to be saved
       const field = _.defaults(_.head(_.remove(fields, ['property', 'methods'])), { property: 'methods', value: [] });
       if (!Array.isArray(field.value)) {
         field.value = [];
       }
-      // Retrieve all payment methods from Mollie and merge
-      mollie.methods.all()
-        .then(methods => {
-          _.remove(field.value, item => !_.includes(_.map(methods, "id"), item._id));
-          _.forEach(methods, method => {
-            if (!_.includes(_.map(field.value, '_id'), method.id)) {
-              field.value.push({
-                _id: method.id,
-                name: method.description,
-                enabled: false,
-              });
-            }
-          });
-          fields.push(field);
-          // Save the new list and other settings
-          Meteor.call("registry/update", id, settingsKey, fields, (err) => {
-            if (err) {
-              return reject(err);
-            }
-            return resolve();
-          });
-        })
-        .catch(err => {
-          Logger.error(`Mollie error: ${JSON.stringify(err)}`);
-          reject(err);
-        })
-      ;
+      const packageData = Packages.findOne({
+        name: NAME,
+        shopId: Reaction.getShopId(),
+      });
+
+      let apiKey = _.get(_.find(fields, ['property', 'apiKey']), 'value', _.get(packageData, `settings.${NAME}.apiKey`));
+      try {
+        const mollie = Mollie({ apiKey });
+        if (typeof mollie === 'undefined') {
+          return process();
+        }
+
+        // Retrieve all payment methods from Mollie and merge
+        mollie.methods.all()
+          .then(methods => {
+            _.remove(field.value, item => !_.includes(_.map(methods, "id"), item._id));
+            _.forEach(methods, method => {
+              if (!_.includes(_.map(field.value, '_id'), method.id)) {
+                field.value.push({
+                  _id: method.id,
+                  name: method.description,
+                  enabled: false,
+                });
+              }
+            });
+            fields.push(field);
+            // Save the new list and other settings
+            return process();
+          })
+          .catch(err => {
+            Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
+            reject(err);
+          })
+        ;
+      } catch (err) {
+        Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
+        return process();
+      }
     });
   },
 
@@ -86,29 +107,78 @@ Meteor.methods({
           paymentInfo.issuer = issuer;
         }
 
-        mollie.payments.create(paymentInfo)
-          .then(payment => {
-            MolliePayments.insert({
-              transactionId: payment.id,
-              cartId: cart._id,
-              method: payment.method,
-              bankStatus: payment.status,
-            });
-            resolve(payment.getPaymentUrl());
-          })
-          .catch(err => {
-            Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
-            reject(err);
-          })
-        ;
+        const packageData = Packages.findOne({
+          name: NAME,
+          shopId: Reaction.getShopId(),
+        });
+        try {
+          const mollie = Mollie({ apiKey: _.get(packageData, `settings.${NAME}.apiKey`) });
+          mollie.payments.create(paymentInfo)
+            .then(payment => {
+              MolliePayments.insert({
+                transactionId: payment.id,
+                cartId: cart._id,
+                method: payment.method,
+                bankStatus: payment.status,
+              });
+              resolve(payment.getPaymentUrl());
+            })
+            .catch(err => {
+              Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
+              reject(err);
+            })
+          ;
+        } catch (e) {
+          reject(e);
+          Logger.warning(`Mollie: failed initializing payment. Is the API key valid?`);
+        }
       });
     } catch (e) {
       if (e.title && e.detail) {
         throw new Meteor.Error(e.title, e.detail);
       }
 
+      Logger.error(JSON.stringify(util.inspect(e)));
       throw new Meteor.Error("An unknown error occurred.");
     }
+  },
+
+  "mollieSubmit"(transactionType, i, paymentData) {
+    check(transactionType, String);
+    check(paymentData, {
+      total: String,
+      currency: String
+    });
+
+    const total = parseFloat(paymentData.total);
+    let result;
+    try {
+      const transaction = {
+        id: "tik12",
+      };
+
+      result = {
+        saved: true,
+        status: "created",
+        currency: paymentData.currency,
+        amount: total,
+        riskLevel: "normal",
+        transactionId: transaction.id,
+        response: {
+          amount: total,
+          transactionId: transaction.id,
+          currency: paymentData.currency
+        }
+      };
+    } catch (error) {
+      Logger.warn(error);
+      result = {
+        saved: false,
+        error,
+      };
+    }
+
+    return result;
   },
 
   /**

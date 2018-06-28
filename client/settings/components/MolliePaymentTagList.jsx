@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { Components } from "/imports/plugins/core/components/lib";
+import { Translation } from "/imports/plugins/core/ui/client/components";
 
 import MolliePaymentTagItem from "./MolliePaymentTagItem";
 

@@ -25,5 +25,10 @@ Reaction.registerPackage({
       provides: ["paymentMethod"],
       icon: "fa fa-credit-card-alt",
     },
+    {
+      route: "/mollie/return",
+      template: "mollieReturn",
+      workflow: "coreWorkflow",
+    },
   ],
 });
