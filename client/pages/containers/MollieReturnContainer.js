@@ -14,7 +14,7 @@ class MollieReturnContainer extends Component {
   };
 
   state = {
-    result: _.get(this.props, 'result'),
+    result: _.get(this.props, "result"),
   };
 
   componentWillReceiveProps(nextProps) {
@@ -32,7 +32,7 @@ class MollieReturnContainer extends Component {
 
 const composer = () => {
   Meteor.subscribe("Orders");
-  const cartId = Reaction.Router.getQueryParam('cartId');
+  const cartId = Reaction.Router.getQueryParam("cartId");
   if (cartId) {
     const order = Orders.findOne({
       cartId,

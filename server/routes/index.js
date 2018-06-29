@@ -2,14 +2,14 @@ import { Meteor } from "meteor/meteor";
 import _ from "lodash";
 import util from "util";
 import { Reaction, Logger } from "/server/api";
-import { Packages, Cart, Order } from "/lib/collections";
+import { Packages, Cart } from "/lib/collections";
 
 import Mollie from "../lib/api/src/mollie";
 import { MolliePayments } from "../../collections";
 import { NAME } from "../../misc/consts";
 import { MollieApiMethod } from "../lib/api/src/models";
 
-const DDPCommon = Package['ddp-common'].DDPCommon;
+const DDPCommon = Package["ddp-common"].DDPCommon;
 
 const processWebhook = (req, res) => {
   const packageData = Packages.findOne({
@@ -18,29 +18,24 @@ const processWebhook = (req, res) => {
   });
   try {
     const mollie = Mollie({ apiKey: _.get(packageData, `settings.${NAME}.apiKey`)});
-    mollie.payments.get(req.body.id)
+    const cartId = _.get(req.url.split('='), '[1]');
+    const cart = Cart.findOne({
+      _id: cartId,
+    });
+    const dbPayment = MolliePayments.findOne({ cartId });
+    if (!dbPayment || !cart) {
+      Reaction.Endpoints.sendResponse(res, {
+        data: {
+          success: true,
+        },
+      });
+    }
+    mollie.payments.get(dbPayment.transactionId)
       .then(molliePayment => {
         MolliePayments.update(
           { transactionId: molliePayment.id },
           { $set: { bankStatus: molliePayment.status },
         });
-
-        const dbPayment = MolliePayments.findOne({ transactionId: molliePayment.id });
-        if (!dbPayment) {
-          Reaction.Endpoints.sendResponse(res, {
-            data: {
-              success: true,
-            },
-          });
-        }
-        const cart = Cart.findOne({ _id: dbPayment.cartId });
-        if (!cart) {
-          Reaction.Endpoints.sendResponse(res, {
-            data: {
-              success: true,
-            },
-          });
-        }
 
         if (molliePayment.isPaid() || molliePayment.method === MollieApiMethod.BANKTRANSFER && molliePayment.isOpen()) {
           // Use an internal DDP method invocation to run the order processing methods
@@ -94,7 +89,7 @@ const processWebhook = (req, res) => {
               randomSeed: Math.random(),
             });
             DDP._CurrentInvocation.withValue(invocation, () => {
-              Meteor.call("orders/refunds/create", order._id, _.get(order, 'billing[0].paymentMethod'), _.get(order, 'invoice[0].total'), true);
+              Meteor.call("orders/refunds/create", order._id, _.get(order, "billing[0].paymentMethod"), _.get(order, "invoice[0].total"), true);
             });
           }
         }

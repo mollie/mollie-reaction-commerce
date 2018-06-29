@@ -33,7 +33,7 @@ Meteor.methods({
       };
 
       // Grab the payment methods from the list that is going to be saved
-      const field = _.defaults(_.head(_.remove(fields, ['property', 'methods'])), { property: 'methods', value: [] });
+      const field = _.defaults(_.head(_.remove(fields, ["property", "methods"])), { property: "methods", value: [] });
       if (!Array.isArray(field.value)) {
         field.value = [];
       }
@@ -42,10 +42,10 @@ Meteor.methods({
         shopId: Reaction.getShopId(),
       });
 
-      let apiKey = _.get(_.find(fields, ['property', 'apiKey']), 'value', _.get(packageData, `settings.${NAME}.apiKey`));
+      let apiKey = _.get(_.find(fields, ["property", "apiKey"]), "value", _.get(packageData, `settings.${NAME}.apiKey`));
       try {
         const mollie = Mollie({ apiKey });
-        if (typeof mollie === 'undefined') {
+        if (typeof mollie === "undefined") {
           return process();
         }
 
@@ -54,7 +54,7 @@ Meteor.methods({
           .then(methods => {
             _.remove(field.value, item => !_.includes(_.map(methods, "id"), item._id));
             _.forEach(methods, method => {
-              if (!_.includes(_.map(field.value, '_id'), method.id)) {
+              if (!_.includes(_.map(field.value, "_id"), method.id)) {
                 field.value.push({
                   _id: method.id,
                   name: method.description,
@@ -96,8 +96,8 @@ Meteor.methods({
             currency,
           },
           description: `Cart ${cart._id}`,
-          redirectUrl: `${Meteor.absoluteUrl()}mollie/return?cartId=${cart._id}`,
-          webhookUrl: `${Meteor.absoluteUrl()}mollie/webhook`,
+          redirectUrl: `${Meteor.absoluteUrl()}mollie/return?cartId=${cart._id}`, // By the time the visitor returns, the cart ID has changed, adding it to the query for cart recovery
+          webhookUrl: `${Meteor.absoluteUrl()}mollie/webhook?cartId=${cart._id}`, // We're unable to access the webhook's content since Reaction only exposes JSON functionality
         };
         if (method) {
           paymentInfo.method = method;
@@ -140,44 +140,6 @@ Meteor.methods({
       Logger.error(JSON.stringify(util.inspect(e)));
       throw new Meteor.Error("An unknown error occurred.");
     }
-  },
-
-  "mollieSubmit"(transactionType, i, paymentData) {
-    check(transactionType, String);
-    check(paymentData, {
-      total: String,
-      currency: String
-    });
-
-    const total = parseFloat(paymentData.total);
-    let result;
-    try {
-      const transaction = {
-        id: "tik12",
-      };
-
-      result = {
-        saved: true,
-        status: "created",
-        currency: paymentData.currency,
-        amount: total,
-        riskLevel: "normal",
-        transactionId: transaction.id,
-        response: {
-          amount: total,
-          transactionId: transaction.id,
-          currency: paymentData.currency,
-        },
-      };
-    } catch (error) {
-      Logger.warn(error);
-      result = {
-        saved: false,
-        error,
-      };
-    }
-
-    return result;
   },
 
   /**

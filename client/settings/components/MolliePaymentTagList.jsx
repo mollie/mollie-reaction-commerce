@@ -53,7 +53,7 @@ class MolliePaymentTagList extends Component {
   handleChecked = (id, checked) => {
     const tags = _.cloneDeep(this.tags);
     const tag = _.find(tags, item => item._id == id);
-    if (typeof tag !== 'undefined') {
+    if (typeof tag !== "undefined") {
       tag.enabled = checked;
     }
     this.setState({
@@ -71,7 +71,7 @@ class MolliePaymentTagList extends Component {
 
   generateTagsList(t) {
     const tags = _.cloneDeep(t);
-    _.sortBy(tags, '_id');
+    _.sortBy(tags, "_id");
     if (Array.isArray(tags)) {
       return tags.map((tag, index) => (
         <MolliePaymentTagItem
@@ -102,7 +102,7 @@ class MolliePaymentTagList extends Component {
 
     return (
       <Components.DragDropProvider>
-        <div className="rui tags" style={{ display: 'block' }}>
+        <div className="rui tags" style={{ display: "block" }}>
           <label><span>{this.props.label}</span></label>
           {this.generateTagsList(_.compact(this.state.methods))}
         </div>

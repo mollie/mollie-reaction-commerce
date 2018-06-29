@@ -25,7 +25,7 @@ class MolliePaymentSelector extends Component {
 
   static initPayment(method) {
     Meteor.call("mollie/payment/create", method, (error, result) => {
-      if (error || typeof result !== 'string') {
+      if (error || typeof result !== "string") {
         Alerts.inline("An error occurred while initializing the payment. Please contact our customer service.", "error", {
           placement: "paymentMethod",
           i18nKey: "mollie.payment.paymentInitError",
