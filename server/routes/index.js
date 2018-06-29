@@ -52,7 +52,7 @@ const processWebhook = (req, res) => {
           randomSeed: Random.id(),
         });
         DDP._CurrentInvocation.withValue(invocation, () => {
-          if (typeof cart === 'object' && (molliePayment.isPaid())) {
+          if (molliePayment.isPaid()) {
             const packageData = Packages.findOne({
               name: NAME,
               shopId: Reaction.getShopId()
@@ -70,7 +70,7 @@ const processWebhook = (req, res) => {
               updatedAt: new Date(),
               transactions: [molliePayment],
               workflow: {
-                status: "new"
+                status: "new",
               },
             });
             // The order object should now be available
