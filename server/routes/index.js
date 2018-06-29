@@ -34,64 +34,61 @@ const processWebhook = (req, res) => {
         },
       });
     }
-    mollie.payments.get(dbPayment.transactionId)
-      .then(molliePayment => {
-        MolliePayments.update(
-          { transactionId: molliePayment.id },
-          { $set: { bankStatus: molliePayment.status },
-        });
-        Logger.debug(molliePayment);
+    const molliePayment = Promise.await(mollie.payments.get(dbPayment.transactionId));
 
-        // Use an internal DDP method invocation to run the order processing methods
-        const invocation = new DDPCommon.MethodInvocation({
-          isSimulation: false,
-          userId: _.get(cart, 'userId', _.get(order, 'userId')),
-          setUserId: () => {},
-          unblock: () => {},
-          connection: {},
-          randomSeed: Random.id(),
+    MolliePayments.update(
+      { transactionId: molliePayment.id },
+      { $set: { bankStatus: molliePayment.status },
+    });
+    Logger.debug(molliePayment);
+    // Use an internal DDP method invocation to run the order processing methods
+    const invocation = new DDPCommon.MethodInvocation({
+      isSimulation: false,
+      userId: _.get(cart, 'userId', _.get(order, 'userId')),
+      setUserId: () => {},
+      unblock: () => {},
+      connection: {},
+      randomSeed: Random.id(),
+    });
+    DDP._CurrentInvocation.withValue(invocation, () => {
+      if (molliePayment.isPaid()) {
+        const packageData = Packages.findOne({
+          name: NAME,
+          shopId: Reaction.getShopId()
         });
-        DDP._CurrentInvocation.withValue(invocation, () => {
-          if (molliePayment.isPaid()) {
-            const packageData = Packages.findOne({
-              name: NAME,
-              shopId: Reaction.getShopId()
-            });
-            Meteor.call("cart/submitPayment", {
-              processor: "Mollie",
-              paymentPackageId: packageData._id,
-              paymentSettingsKey: NAME,
-              method: "credit",
-              transactionId: molliePayment.id,
-              amount: parseFloat(molliePayment.amount.value),
-              status: "completed",
-              mode: "capture",
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              transactions: [molliePayment],
-              workflow: {
-                status: "new",
-              },
-            });
-            // The order object should now be available
-            order = Orders.findOne({
-              cartId,
-            });
-            // Attach the ne order ID to the new MolliePayment
-            MolliePayments.update({
-              transactionId: molliePayment.id,
-            }, {
-              $set: { orderId: order._id },
-            });
-          } else if (typeof order !== 'undefined' && molliePayment.method === MollieApiMethod.BANKTRANSFER && (molliePayment.isExpired() || molliePayment.isCanceled())) {
-            // Release the products because the bank transfer has expired
-            Meteor.call("inventory/clearReserve", _.get(order, 'items', _.get(cart, 'items', [])));
-          }
+        Meteor.call("cart/submitPayment", {
+          processor: "Mollie",
+          paymentPackageId: packageData._id,
+          paymentSettingsKey: NAME,
+          method: "credit",
+          transactionId: molliePayment.id,
+          amount: parseFloat(molliePayment.amount.value),
+          status: "completed",
+          mode: "capture",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          transactions: [molliePayment],
+          workflow: {
+            status: "new",
+          },
         });
-      })
-      .catch(err => Logger.error(`Mollie Webhook Error: ${JSON.stringify(util.inspect(err))}`))
-  } catch (e) {
-    Logger.error(`Mollie error: ${JSON.stringify(util.inspect(e))}`);
+        // The order object should now be available
+        order = Orders.findOne({
+          cartId,
+        });
+        // Attach the ne order ID to the new MolliePayment
+        MolliePayments.update({
+          transactionId: molliePayment.id,
+        }, {
+          $set: { orderId: order._id },
+        });
+      } else if (typeof order !== 'undefined' && molliePayment.method === MollieApiMethod.BANKTRANSFER && (molliePayment.isExpired() || molliePayment.isCanceled())) {
+        // Release the products because the bank transfer has expired
+        Meteor.call("inventory/clearReserve", _.get(order, 'items', _.get(cart, 'items', [])));
+      }
+    });
+  } catch (err) {
+    Logger.error(`Mollie Webhook Error: ${JSON.stringify(util.inspect(err))}`);
     Reaction.Endpoints.sendResponse(res, {
       code: 500,
       data: {
