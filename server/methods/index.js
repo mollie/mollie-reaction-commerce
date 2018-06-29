@@ -10,6 +10,7 @@ import { Cart, Packages, Shops, Accounts } from "/lib/collections";
 import { MolliePayments } from "../../collections";
 import { NAME } from "../../misc/consts";
 import Mollie from "../../lib/api/src/mollie";
+import { MollieApiMethod } from "../../lib/api/src/models";
 
 /**
  * Meteor methods for the Mollie Plugin. Run these methods using `Meteor.call()`
