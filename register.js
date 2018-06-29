@@ -41,7 +41,7 @@ Reaction.registerPackage({
     {
       route: "/mollie/return",
       template: "mollieReturn",
-      workflow: "coreCartWorkflow",
+      workflow: "coreWorkflow",
     },
   ],
 });
