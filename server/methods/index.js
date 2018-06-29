@@ -154,14 +154,8 @@ Meteor.methods({
                 currency: payment.amount.currency || Shops.findOne().currency,
               });
               if (payment.method === MollieApiMethod.BANKTRANSFER) {
-                // Reserve the items for the bank transfer...
-                Meteor.call("inventory/addReserve", _.get(cart, 'items', _.get(order, 'items', [])));
-                // ...and create a new cart for the user
-                Cart.insert({
-                  userId: this.userId,
-                  sessionId: this.randomSeed,
-                  shopId: Reaction.getShopId(),
-                });
+                // Reserve the items for the bank transfer
+                Meteor.call("inventory/addReserve", _.get(cart, 'items', []));
               }
               resolve(payment.getPaymentUrl());
             })
