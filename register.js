@@ -9,6 +9,19 @@ Reaction.registerPackage({
   settings: {
     apiKey: "",
     methods: [],
+    supports: [
+      "Authorize",
+    ],
+    "mollie": {
+      enabled: false,
+      apiKey: "",
+      methods: [],
+      support: [
+        "Authorize",
+        "Capture",
+        "Refund",
+      ],
+    },
   },
   registry: [
     // Settings panel

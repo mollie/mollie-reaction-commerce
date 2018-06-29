@@ -15,6 +15,15 @@ export const MolliePaymentsSchema = new SimpleSchema({
     type: String,
     label: "Transaction ID"
   },
+  amount: {
+    type: Number,
+    label: "Amount",
+  },
+  currency: {
+    type: String,
+    max: 3,
+    label: "Currency"
+  },
   cartId: {
     type: String,
     label: "Cart ID"

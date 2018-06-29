@@ -9,90 +9,99 @@ import { Cart, Packages, Shops } from "/lib/collections";
 
 import { MolliePayments } from "../../collections";
 import { NAME } from "../../misc/consts";
-import Mollie from "../lib/api/src/mollie";
+import Mollie from "../../lib/api/src/mollie";
 
 /**
  * Meteor methods for the Mollie Plugin. Run these methods using `Meteor.call()`
  * @namespace Payment/Mollie/Methods
  */
 Meteor.methods({
-  async "mollie/settings/save"(id, settingsKey, fields) {
+  "mollie/settings/save"(id, settingsKey, fields) {
     // Check all arguments
     check(id, Match.Any);
     check(settingsKey, Match.Any);
     check(fields, Match.Any);
 
-    return await new Promise((resolve, reject) => {
-      const process = () => {
-        Meteor.call("registry/update", id, settingsKey, fields, (err) => {
-          if (err) {
-            return reject(err);
-          }
-          return resolve();
+    try {
+      return Promise.await(new Promise((resolve, reject) => {
+        const process = () => {
+          Meteor.call("registry/update", id, settingsKey, fields, (err) => {
+            if (err) {
+              return reject(err);
+            }
+            return resolve();
+          });
+        };
+
+        // Grab the payment methods from the list that is going to be saved
+        const field = _.defaults(_.head(_.remove(fields, ["property", "methods"])), { property: "methods", value: [] });
+        if (!Array.isArray(field.value)) {
+          field.value = [];
+        }
+        const packageData = Packages.findOne({
+          name: NAME,
+          shopId: Reaction.getShopId(),
         });
-      };
 
-      // Grab the payment methods from the list that is going to be saved
-      const field = _.defaults(_.head(_.remove(fields, ["property", "methods"])), { property: "methods", value: [] });
-      if (!Array.isArray(field.value)) {
-        field.value = [];
-      }
-      const packageData = Packages.findOne({
-        name: NAME,
-        shopId: Reaction.getShopId(),
-      });
+        let apiKey = _.get(_.find(fields, ["property", "apiKey"]), "value", _.get(packageData, `settings.${NAME}.apiKey`));
+        try {
+          const mollie = Mollie({ apiKey });
+          if (typeof mollie === "undefined") {
+            return process();
+          }
 
-      let apiKey = _.get(_.find(fields, ["property", "apiKey"]), "value", _.get(packageData, `settings.${NAME}.apiKey`));
-      try {
-        const mollie = Mollie({ apiKey });
-        if (typeof mollie === "undefined") {
+          // Retrieve all payment methods from Mollie and merge
+          mollie.methods.all()
+            .then(methods => {
+              _.remove(field.value, item => !_.includes(_.map(methods, "id"), item._id));
+              _.forEach(methods, method => {
+                if (!_.includes(_.map(field.value, "_id"), method.id)) {
+                  field.value.push({
+                    _id: method.id,
+                    name: method.description,
+                    enabled: false,
+                  });
+                }
+              });
+              fields.push(field);
+              // Save the new list and other settings
+              return process();
+            })
+            .catch(err => {
+              Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
+              reject(err);
+            })
+          ;
+        } catch (err) {
+          Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
           return process();
         }
-
-        // Retrieve all payment methods from Mollie and merge
-        mollie.methods.all()
-          .then(methods => {
-            _.remove(field.value, item => !_.includes(_.map(methods, "id"), item._id));
-            _.forEach(methods, method => {
-              if (!_.includes(_.map(field.value, "_id"), method.id)) {
-                field.value.push({
-                  _id: method.id,
-                  name: method.description,
-                  enabled: false,
-                });
-              }
-            });
-            fields.push(field);
-            // Save the new list and other settings
-            return process();
-          })
-          .catch(err => {
-            Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
-            reject(err);
-          })
-        ;
-      } catch (err) {
-        Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
-        return process();
-      }
-    });
+      }));
+    } catch (err) {
+      Logger.error(`Mollie error: ${JSON.stringify(util.inspect(err))}`);
+      throw new Meteor.Error("server-error", "An unexpected error occurred while saving the Mollie module settings");
+    }
   },
 
-  async "mollie/payment/create"(method, issuer) {
+  "mollie/payment/create"(method, issuer) {
     // Check all arguments
     check(method, String);
     check(issuer, Match.Maybe(String));
 
     try {
-      return await new Promise((resolve, reject) => {
+      return Promise.await(new Promise((resolve, reject) => {
         // Grab the current cart
-        const cart = Cart.findOne();
+        const cart = Cart.findOne({
+          userId: Meteor.userId(),
+        }, {
+          sort: { createdAt: -1 },
+        });
         const currency = Shops.findOne().currency;
         const value = cart.getTotal();
         // Grab the payment info
         const paymentInfo = {
           amount: {
-            value,
+            value: parseFloat(_.toString(value)).toFixed(2),
             currency,
           },
           description: `Cart ${cart._id}`,
@@ -105,6 +114,9 @@ Meteor.methods({
         if (issuer) {
           paymentInfo.issuer = issuer;
         }
+
+        // TODO: set to debug level
+        Logger.info(`Mollie Payment: ${JSON.stringify(paymentInfo)}`);
 
         const packageData = Packages.findOne({
           name: NAME,
@@ -119,6 +131,8 @@ Meteor.methods({
                 cartId: cart._id,
                 method: payment.method,
                 bankStatus: payment.status,
+                amount: payment.amount.value,
+                currency: payment.amount.currency || Shops.findOne().currency,
               });
               resolve(payment.getPaymentUrl());
             })
@@ -131,14 +145,14 @@ Meteor.methods({
           reject(e);
           Logger.warning(`Mollie: failed initializing payment. Is the API key valid?`);
         }
-      });
+      }));
     } catch (e) {
       if (e.title && e.detail) {
         throw new Meteor.Error(e.title, e.detail);
       }
 
       Logger.error(JSON.stringify(util.inspect(e)));
-      throw new Meteor.Error("An unknown error occurred.");
+      throw new Meteor.Error("server-error", "An unexpected error occurred while creating a Mollie payment");
     }
   },
 
@@ -153,57 +167,102 @@ Meteor.methods({
   "mollie/refund/create"(reactionPayment, amount) {
     // Check all arguments
     check(amount, Number);
-    // Call both check and validate because by calling `clean`, the audit pkg
-    // thinks that we haven't checked paymentMethod arg
     check(reactionPayment, Object);
-    MolliePayments.validate(MolliePayments.clean(reactionPayment));
 
-    const { transactionId } = reactionPayment;
-    // const response = Mollie.methods.refund.call({
-    //   transactionId,
-    //   amount
-    // });
-    // const results = {
-    //   saved: true,
-    //   response
-    // };
-    // return results;
-    return {};
+    try {
+      return Promise.await(new Promise((resolve, reject) => {
+        const { transactionId } = reactionPayment;
+
+        const packageData = Packages.findOne({
+          name: NAME,
+          shopId: Reaction.getShopId(),
+        });
+        const dbPayment = MolliePayments.findOne({
+          transactionId,
+        });
+        if (!dbPayment) {
+          Logger.error(`Mollie Error: payment for transaction ID ${transactionId} not found`);
+          return resolve({ saved: false });
+        }
+
+        try {
+          const mollie = Mollie({ apiKey: _.get(packageData, `settings.${NAME}.apiKey`) });
+          mollie.payments_refunds.create({
+            paymentId: transactionId,
+            amount: {
+              currency: dbPayment.currency || Shops.findOne().currency,
+              value: parseFloat(_.toString(amount)).toFixed(2),
+            }
+          })
+            .then(refund => {
+              return resolve({
+                saved: true,
+                response: refund,
+              });
+            })
+            .catch(e => {
+              Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
+              return resolve({ saved: false });
+            });
+        } catch (e) {
+          Logger.error(`Mollie Error - unable to initialize: ${JSON.stringify(util.inspect(e))}`);
+          return resolve({ saved: false });
+        }
+      }));
+    } catch (e) {
+      Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
+      throw new Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds");
+    }
   },
 
   /**
    * List refunds
    * @method
    * @memberof Payment/Mollie/Methods
-   * @param  {Object} reactionPayment Object containing the pertinant data
+   * @param  {Object} reactionPayment Object containing the pertinent data
    * @return {Object} result
    */
   "mollie/refund/list"(reactionPayment) {
-    // Call both check and validate because by calling `clean`, the audit pkg
-    // thinks that we haven't checked reactionPayment arg
+    // Check all arguments
     check(reactionPayment, Object);
-    // MolliePayments.validate(MolliePayments.clean(reactionPayment));
 
-    // const { transactionId } = reactionPayment;
-    // const response = Mollie.methods.refunds.call({
-    //   transactionId
-    // });
-    // const result = [];
-    // for (const refund of response.refunds) {
-    //   result.push(refund);
-    // }
+    try {
+      return Promise.await(new Promise((resolve, reject) => {
+        const { transactionId } = reactionPayment;
 
-    // The results retured from the GenericAPI just so happen to look like exactly what the dashboard
-    // wants. The return package should ba an array of objects that look like this
-    // {
-    //   type: "refund",
-    //   amount: Number,
-    //   created: Number: Epoch Time,
-    //   currency: String,
-    //   raw: Object
-    // }
-    // const emptyResult = [];
-    // return emptyResult;
-    return [];
+        const packageData = Packages.findOne({
+          name: NAME,
+          shopId: Reaction.getShopId(),
+        });
+
+        try {
+          const mollie = Mollie({ apiKey: _.get(packageData, `settings.${NAME}.apiKey`) });
+          mollie.payments_refunds.all({ paymentId: transactionId })
+            .then(refunds => {
+              const results = [];
+              _.forEach(refunds, refund => {
+                results.push({
+                  type: "refund",
+                  amount: parseFloat(refund.amount.value),
+                  created: refund.createdAt,
+                  currency: refund.amount.currency || Shops.findOne().currency,
+                  raw: refund,
+                });
+              });
+              return resolve(results);
+            })
+            .catch(e => {
+              Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
+              return resolve([]);
+            });
+        } catch (e) {
+          Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
+          reject(Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds"));
+        }
+      }));
+    } catch (e) {
+      Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
+      throw new Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds");
+    }
   }
 });
