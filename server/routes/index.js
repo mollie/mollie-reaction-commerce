@@ -1,4 +1,5 @@
 import { Meteor } from "meteor/meteor";
+import { Random } from "meteor/random";
 import _ from "lodash";
 import util from "util";
 import { Reaction, Logger } from "/server/api";
@@ -22,8 +23,11 @@ const processWebhook = (req, res) => {
     const cart = Cart.findOne({
       _id: cartId,
     });
+    let order = Orders.findOne({
+      cartId,
+    });
     const dbPayment = MolliePayments.findOne({ cartId });
-    if (typeof dbPayment !== 'object' || typeof cart !== 'object') {
+    if (typeof dbPayment !== 'object') {
       Reaction.Endpoints.sendResponse(res, {
         data: {
           success: true,
@@ -36,23 +40,24 @@ const processWebhook = (req, res) => {
           { transactionId: molliePayment.id },
           { $set: { bankStatus: molliePayment.status },
         });
+        Logger.info(molliePayment);
 
-        if (typeof cart === 'object' && (molliePayment.isPaid() || molliePayment.method === MollieApiMethod.BANKTRANSFER && molliePayment.isOpen())) {
-          // Use an internal DDP method invocation to run the order processing methods
-          const invocation = new DDPCommon.MethodInvocation({
-            isSimulation: false,
-            userId: cart.userId,
-            setUserId: () => {},
-            unblock: () => {},
-            connection: {},
-            randomSeed: Math.random(),
-          });
-          DDP._CurrentInvocation.withValue(invocation, () => {
+        // Use an internal DDP method invocation to run the order processing methods
+        const invocation = new DDPCommon.MethodInvocation({
+          isSimulation: false,
+          userId: _.get(cart, 'userId', _.get(order, 'userId')),
+          setUserId: () => {},
+          unblock: () => {},
+          connection: {},
+          randomSeed: Random.id(),
+        });
+        DDP._CurrentInvocation.withValue(invocation, () => {
+          if (typeof cart === 'object' && (molliePayment.isPaid())) {
             const packageData = Packages.findOne({
               name: NAME,
               shopId: Reaction.getShopId()
             });
-            const newCart = Meteor.call("cart/submitPayment", {
+            Meteor.call("cart/submitPayment", {
               processor: "Mollie",
               paymentPackageId: packageData._id,
               paymentSettingsKey: NAME,
@@ -68,13 +73,31 @@ const processWebhook = (req, res) => {
                 status: "new"
               },
             });
-            MolliePayments.update({
-              _id: molliePayment.id,
-            }, {
-              $set: { orderId: newCart.orderId },
+            // The order object should now be available
+            order = Orders.findOne({
+              cartId,
             });
-          });
-        } 
+            // Attach the ne order ID to the new MolliePayment
+            MolliePayments.update({
+              transactionId: molliePayment.id,
+            }, {
+              $set: { orderId: order._id },
+            });
+          } else if (typeof cart !== 'undefined' && molliePayment.method === MollieApiMethod.BANKTRANSFER && molliePayment.isOpen()) {
+            // Reserve the products for the pending bank transfer
+            Meteor.call("inventory/addReserve", _.get(cart, 'items', _.get(order, 'items', [])));
+            // Create a new cart for the user
+            Cart.insert({
+              userId: this.userId,
+              sessionId: this.randomSeed,
+              shopId: Reaction.getShopId(),
+            });
+          } else if (typeof order !== 'undefined' && molliePayment.method === MollieApiMethod.BANKTRANSFER && (molliePayment.isExpired() || molliePayment.isCanceled())) {
+            Logger.info('banktransfer expired or canceled');
+            // Release the products because the bank transfer has expired
+            Meteor.call("inventory/clearReserve", _.get(order, 'items', _.get(cart, 'items', [])));
+          }
+        });
       })
       .catch(err => Logger.error(`Mollie Webhook Error: ${JSON.stringify(util.inspect(err))}`))
   } catch (e) {

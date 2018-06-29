@@ -11,6 +11,10 @@
       },
       "payment": {
         "paymentInitError": "An error occurred while initializing the payment. Please contact our customer service."
+      },
+      "return": {
+        "welcomeBack": "Welcome back!",
+        "notReceivedPaymentStatus": "We have not yet received a definite payment status. You will be notified once your payment has been accepted."
       }
     },
     "admin": {

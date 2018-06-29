@@ -25,12 +25,17 @@ class MollieReturnContainer extends Component {
 
   render() {
     return (
-      <strong><Translation i18nKey="mollie.return.checkingForOrders" defaultValue="Checking for new orders..."/></strong>
+      <div id="container-main">
+        <div className="container-main">
+          <h1><Translation i18nKey="mollie.return.welcomeBack" defaultValue="Welcome back!"/></h1>
+          <strong><Translation i18nKey="mollie.return.notReceivedPaymentStatus" defaultValue="We have not yet received a definite payment status. You will be notified once your payment has been accepted."/></strong>
+        </div>
+      </div>
     )
   }
 }
 
-const composer = () => {
+const composer = (props, onData) => {
   Meteor.subscribe("Orders");
   const cartId = Reaction.Router.getQueryParam("cartId");
   if (cartId) {
@@ -54,6 +59,8 @@ const composer = () => {
           }
         });
     }
+
+    onData(null, { cartId });
   }
 };
 

@@ -20,7 +20,8 @@ class MolliePaymentSelectorContainer extends Component {
 }
 
 const composer = (props, onData) => {
-  const subscription = Meteor.subscribe("mollie/methods/list", Reaction.getShopId(), () => {
+  const subscription = Meteor.subscribe("Packages");
+  Meteor.subscribe("mollie/methods/list", Reaction.getShopId(), () => {
     const packages = Packages.find({
       name: NAME,
       shopId: Reaction.getShopId(),
@@ -30,7 +31,6 @@ const composer = (props, onData) => {
     packages
       .observe({
         changedAt(data) {
-          console.log(data);
           onData(null, { methods: _.get(data, `settings.${NAME}.methods`)});
         }
       });
@@ -40,7 +40,7 @@ const composer = (props, onData) => {
       name: NAME,
       shopId: Reaction.getShopId()
     });
-    onData(null, { methods: _.get(packageData, `settings.${NAME}.methods`, "") });
+    onData(null, { methods: _.get(packageData, `settings.${NAME}.methods`) });
   }
 };
 

@@ -5,10 +5,11 @@ import _ from "lodash";
 
 import { getSupportedMethods } from "../../../misc/paymentmethods";
 import { Shops } from "../../../../../../../lib/collections";
+import { Reaction } from "../../../../../../../client/api";
 
 class MolliePaymentSelector extends Component {
   state = {
-    methods: [],
+    methods: _.get(this.props, 'methods', []),
   };
 
   static propTypes = {
@@ -38,7 +39,7 @@ class MolliePaymentSelector extends Component {
   }
 
   render() {
-    const availableMethods = getSupportedMethods(Shops.findOne().currency);
+    const availableMethods = getSupportedMethods(Shops.findOne({ _id: Reaction.getShopId() }).currency);
 
     return (
       <div>

@@ -11,6 +11,10 @@
       },
       "payment": {
         "paymentInitError": "Er is een fout opgetreden bij het initialiseren van de betaling."
+      },
+      "return": {
+        "welcomeBack": "Welkom terug!",
+        "notReceivedPaymentStatus": "Er is nog geen definitieve betaalstatus bekend. U wordt op de hoogte gesteld zodra de bank de status doorgeeft."
       }
     },
     "admin": {

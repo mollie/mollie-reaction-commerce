@@ -115,8 +115,7 @@ Meteor.methods({
           paymentInfo.issuer = issuer;
         }
 
-        // TODO: set to debug level
-        Logger.info(`Mollie Payment: ${JSON.stringify(paymentInfo)}`);
+        Logger.debug(`Mollie Payment: ${JSON.stringify(paymentInfo)}`);
 
         const packageData = Packages.findOne({
           name: NAME,
@@ -194,10 +193,10 @@ Meteor.methods({
               value: parseFloat(_.toString(amount)).toFixed(2),
             }
           })
-            .then(refund => {
+            .then(() => {
               return resolve({
                 saved: true,
-                response: refund,
+                response: null,
               });
             })
             .catch(e => {
@@ -246,7 +245,7 @@ Meteor.methods({
                   amount: parseFloat(refund.amount.value),
                   created: refund.createdAt,
                   currency: refund.amount.currency || Shops.findOne().currency,
-                  raw: refund,
+                  raw: null,
                 });
               });
               return resolve(results);
