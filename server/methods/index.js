@@ -182,7 +182,7 @@ Meteor.methods({
     // Call both check and validate because by calling `clean`, the audit pkg
     // thinks that we haven't checked reactionPayment arg
     check(reactionPayment, Object);
-    MolliePayments.validate(MolliePayments.clean(reactionPayment));
+    // MolliePayments.validate(MolliePayments.clean(reactionPayment));
 
     // const { transactionId } = reactionPayment;
     // const response = Mollie.methods.refunds.call({
