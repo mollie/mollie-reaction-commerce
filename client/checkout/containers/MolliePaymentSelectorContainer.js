@@ -31,7 +31,7 @@ const composer = (props, onData) => {
     packages
       .observe({
         changedAt(data) {
-          onData(null, { methods: _.get(data, `settings.${NAME}.methods`)});
+          onData(null, { methods: _.get(data, `settings.${NAME}.methods`, [])});
         }
       });
   });
@@ -40,7 +40,7 @@ const composer = (props, onData) => {
       name: NAME,
       shopId: Reaction.getShopId()
     });
-    onData(null, { methods: _.get(packageData, `settings.${NAME}.methods`) });
+    onData(null, { methods: _.get(packageData, `settings.${NAME}.methods`, []) });
   }
 };
 

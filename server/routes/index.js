@@ -40,7 +40,7 @@ const processWebhook = (req, res) => {
           { transactionId: molliePayment.id },
           { $set: { bankStatus: molliePayment.status },
         });
-        Logger.info(molliePayment);
+        Logger.debug(molliePayment);
 
         // Use an internal DDP method invocation to run the order processing methods
         const invocation = new DDPCommon.MethodInvocation({
@@ -84,6 +84,7 @@ const processWebhook = (req, res) => {
               $set: { orderId: order._id },
             });
           } else if (typeof cart !== 'undefined' && molliePayment.method === MollieApiMethod.BANKTRANSFER && molliePayment.isOpen()) {
+            // FIXME: move to payment init
             // Reserve the products for the pending bank transfer
             Meteor.call("inventory/addReserve", _.get(cart, 'items', _.get(order, 'items', [])));
             // Create a new cart for the user
@@ -93,7 +94,6 @@ const processWebhook = (req, res) => {
               shopId: Reaction.getShopId(),
             });
           } else if (typeof order !== 'undefined' && molliePayment.method === MollieApiMethod.BANKTRANSFER && (molliePayment.isExpired() || molliePayment.isCanceled())) {
-            Logger.info('banktransfer expired or canceled');
             // Release the products because the bank transfer has expired
             Meteor.call("inventory/clearReserve", _.get(order, 'items', _.get(cart, 'items', [])));
           }

@@ -5,7 +5,7 @@ import util from "util";
 import _ from "lodash";
 
 import { Reaction, Logger } from "/server/api";
-import { Cart, Packages, Shops } from "/lib/collections";
+import { Cart, Packages, Shops, Accounts } from "/lib/collections";
 
 import { MolliePayments } from "../../collections";
 import { NAME } from "../../misc/consts";
@@ -97,6 +97,10 @@ Meteor.methods({
           sort: { createdAt: -1 },
         });
         const currency = Shops.findOne().currency;
+        const account = Accounts.findOne({
+          userId: cart.userId,
+        });
+
         const value = cart.getTotal();
         // Grab the payment info
         const paymentInfo = {
@@ -107,6 +111,21 @@ Meteor.methods({
           description: `Cart ${cart._id}`,
           redirectUrl: `${Meteor.absoluteUrl()}mollie/return?cartId=${cart._id}`, // By the time the visitor returns, the cart ID has changed, adding it to the query for cart recovery
           webhookUrl: `${Meteor.absoluteUrl()}mollie/webhook?cartId=${cart._id}`, // We're unable to access the webhook's content since Reaction only exposes JSON functionality
+          billingEmail: _.get(account, 'email[0].address'),
+          shippingAddress: {
+            streetAndNumber: _.trim(_.get(cart, 'shipping[0].address.address1', '') + ' ' + _.get(cart, 'shipping[0].address.address2', '')),
+            city: _.get(cart, 'shipping[0].address.city'),
+            region: _.get(cart, 'shipping[0].address.region'),
+            postalCode: _.get(cart, 'shipping[0].address.postal'),
+            country: _.get(cart, 'shipping[0].address.country'),
+          },
+          billingAddress: {
+            streetAndNumber: _.trim(_.get(cart, 'billing[0].address.address1', '') + ' ' + _.get(cart, 'shipping[0].address.address2', '')),
+            city: _.get(cart, 'shipping[0].address.city', ''),
+            region: _.get(cart, 'shipping[0].address.region'),
+            postalCode: _.get(cart, 'shipping[0].address.postal'),
+            country: _.get(cart, 'shipping[0].address.country'),
+          },
         };
         if (method) {
           paymentInfo.method = method;

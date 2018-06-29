@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 
 import { getSupportedMethods } from "../../../misc/paymentmethods";
-import { Shops } from "../../../../../../../lib/collections";
-import { Reaction } from "../../../../../../../client/api";
+import { Shops } from "/lib/collections";
+import { Reaction } from "/client/api";
 
 class MolliePaymentSelector extends Component {
   state = {
@@ -13,7 +13,7 @@ class MolliePaymentSelector extends Component {
   };
 
   static propTypes = {
-    methods: PropTypes.any,
+    methods: PropTypes.array,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -39,11 +39,14 @@ class MolliePaymentSelector extends Component {
   }
 
   render() {
-    const availableMethods = getSupportedMethods(Shops.findOne({ _id: Reaction.getShopId() }).currency);
+    const availableMethods = _.filter(this.state.methods, item => item.enabled && _.includes(getSupportedMethods(Shops.findOne({ _id: Reaction.getShopId() }).currency), item._id));
+    if (_.isEmpty(availableMethods)) {
+      return null;
+    }
 
     return (
       <div>
-        {_.filter(this.state.methods, item => item.enabled && _.includes(availableMethods, item._id)).map((method) => (
+        {availableMethods.map((method) => (
           <a
             className="rui btn btn-lg btn-default btn-block"
             style={{ display: "block", height: "60px" }}
