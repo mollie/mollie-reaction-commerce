@@ -83,16 +83,6 @@ const processWebhook = (req, res) => {
             }, {
               $set: { orderId: order._id },
             });
-          } else if (typeof cart !== 'undefined' && molliePayment.method === MollieApiMethod.BANKTRANSFER && molliePayment.isOpen()) {
-            // FIXME: move to payment init
-            // Reserve the products for the pending bank transfer
-            Meteor.call("inventory/addReserve", _.get(cart, 'items', _.get(order, 'items', [])));
-            // Create a new cart for the user
-            Cart.insert({
-              userId: this.userId,
-              sessionId: this.randomSeed,
-              shopId: Reaction.getShopId(),
-            });
           } else if (typeof order !== 'undefined' && molliePayment.method === MollieApiMethod.BANKTRANSFER && (molliePayment.isExpired() || molliePayment.isCanceled())) {
             // Release the products because the bank transfer has expired
             Meteor.call("inventory/clearReserve", _.get(order, 'items', _.get(cart, 'items', [])));
