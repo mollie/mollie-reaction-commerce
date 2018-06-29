@@ -7,10 +7,9 @@ import _ from "lodash";
 import { Reaction, Logger } from "/server/api";
 import { Cart, Packages, Shops } from "/lib/collections";
 
-import { MolliePayments } from "../collections";
+import { MolliePayments } from "../../collections";
 import { NAME } from "../../misc/consts";
 import Mollie from "../lib/api/src/mollie";
-import { ValidCardNumber, ValidCVV, ValidExpireMonth, ValidExpireYear } from "../../../../../../lib/api";
 
 /**
  * Meteor methods for the Mollie Plugin. Run these methods using `Meteor.call()`
@@ -97,7 +96,7 @@ Meteor.methods({
             currency,
           },
           description: `Cart ${cart._id}`,
-          redirectUrl: `${Meteor.absoluteUrl()}mollie/return`,
+          redirectUrl: `${Meteor.absoluteUrl()}mollie/return?cartId=${cart._id}`,
           webhookUrl: `${Meteor.absoluteUrl()}mollie/webhook`,
         };
         if (method) {
@@ -167,8 +166,8 @@ Meteor.methods({
         response: {
           amount: total,
           transactionId: transaction.id,
-          currency: paymentData.currency
-        }
+          currency: paymentData.currency,
+        },
       };
     } catch (error) {
       Logger.warn(error);

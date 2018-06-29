@@ -20,7 +20,7 @@ class MolliePaymentSelectorContainer extends Component {
 }
 
 const composer = (props, onData) => {
-  Meteor.subscribe("mollie/methods/list", Reaction.getShopId(), () => {
+  const subscription = Meteor.subscribe("mollie/methods/list", Reaction.getShopId(), () => {
     const packages = Packages.find({
       name: NAME,
       shopId: Reaction.getShopId(),
@@ -34,8 +34,14 @@ const composer = (props, onData) => {
           onData(null, { methods: _.get(data, `settings.${NAME}.methods`)});
         }
       });
-    onData(null, { methods: _.get(packages.fetch(), `[0].settings.${NAME}.methods`, "") });
   });
+  if (subscription.ready()) {
+    const packageData = Packages.findOne({
+      name: NAME,
+      shopId: Reaction.getShopId()
+    });
+    onData(null, { methods: _.get(packageData, `settings.${NAME}.methods`, "") });
+  }
 };
 
 export default composeWithTracker(composer)(MolliePaymentSelectorContainer);

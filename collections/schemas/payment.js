@@ -30,7 +30,6 @@ export const MolliePaymentsSchema = new SimpleSchema({
   },
   bankStatus: {
     type: String,
-    max: 4,
     label: "Bank Status"
   },
   createdAt: {

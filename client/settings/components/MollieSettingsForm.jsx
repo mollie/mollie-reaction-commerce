@@ -24,7 +24,7 @@ class MollieSettingsForm extends Component {
     settings: {
       apiKey: "",
       methods: [],
-    }
+    },
   };
 
   componentWillReceiveProps(nextProps) {

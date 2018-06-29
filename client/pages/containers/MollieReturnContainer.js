@@ -1,55 +1,60 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
+import { Meteor } from "meteor/meteor";
 
 import { Reaction } from "/client/api";
-import { Meteor } from "meteor/meteor";
-import _ from "lodash";
-
-import { composeWithTracker } from "../../../../../core/components/lib/composer";
+import { composeWithTracker } from "/imports/plugins/core/components/lib/composer";
+import { Orders } from "/lib/collections";
+import Translation from "/imports/plugins/core/ui/client/components/translation/translation";
 
 class MollieReturnContainer extends Component {
   static propTypes = {
-    result: PropTypes.string,
-    orderId: PropTypes.string,
+    result: PropTypes.any,
   };
 
   state = {
     result: _.get(this.props, 'result'),
-    orderId: _.get(this.props, 'orderId'),
   };
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       result: nextProps.result,
-      orderId: nextProps.orderId,
     });
   }
 
   render() {
-    if (_.includes([STATUS_PAID, STATUS_CANCELED], this.state.status)) {
-      Reaction.Router.go("/");
-    }
-
-    if (!this.state.payment) {
-      return (
-        <p>Loading</p>
-      );
-    }
-
     return (
-      <pre>
-        <code>
-          {JSON.stringify(this.state.payment, null, 2)}
-        </code>
-      </pre>
-    );
+      <strong><Translation i18nKey="mollie.return.checkingForOrders" defaultValue="Checking for new orders..."/></strong>
+    )
   }
 }
 
-const composer = (props, onData) => {
-  Meteor.subscribe("mollie/payments/status", Reaction.Router.getQueryParam('cartId'), function (error, result) {
-    onData(error, { result, orderId });
-  });
+const composer = () => {
+  Meteor.subscribe("Orders");
+  const cartId = Reaction.Router.getQueryParam('cartId');
+  if (cartId) {
+    const order = Orders.findOne({
+      cartId,
+    });
+    if (order) {
+      Reaction.Router.go("cart/completed", {}, { _id: cartId });
+    } else {
+      // Observe orders
+      Orders.find({
+        cartId,
+      }, {
+        limit: 1,
+      })
+        .observe({
+          changedAt(order) {
+            if (order) {
+              Reaction.Router.go("cart/completed", {}, { _id: order.cartId });
+            }
+          }
+        });
+    }
+  }
 };
 
 export default composeWithTracker(composer)(MollieReturnContainer);

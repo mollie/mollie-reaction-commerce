@@ -89,10 +89,10 @@ class MollieSettingsFormContainer extends Component {
 }
 
 const composer = (props, onData) => {
-  Meteor.subscribe("Packages", Reaction.getShopId(), () => {
+  const subscription = Meteor.subscribe("Packages", Reaction.getShopId(), () => {
     const packages = Packages.find({
       name: NAME,
-      shopId: Reaction.getShopId()
+      shopId: Reaction.getShopId(),
     }, {
       limit: 1,
     });
@@ -102,8 +102,15 @@ const composer = (props, onData) => {
           onData(null, { packageData: newDoc });
         }
       });
-    onData(null, { packageData: _.head(packages.fetch()) });
   });
+  if (subscription.ready()) {
+    onData(null, {
+      packageData: Packages.findOne({
+        name: NAME,
+        shopId: Reaction.getShopId(),
+      })
+    });
+  }
 };
 
 export default composeWithTracker(composer)(MollieSettingsFormContainer);
