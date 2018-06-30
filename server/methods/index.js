@@ -11,6 +11,7 @@ import { MolliePayments } from "../../collections";
 import { NAME } from "../../misc/consts";
 import Mollie from "../../lib/api/src/mollie";
 import { MollieApiMethod } from "../../lib/api/src/models";
+import { getMollieLocale } from "../../misc";
 
 /**
  * Meteor methods for the Mollie Plugin. Run these methods using `Meteor.call()`
@@ -79,6 +80,12 @@ Meteor.methods({
     check(issuer, Match.Maybe(String));
 
     try {
+      // Grab the module configuration
+      const packageData = Packages.findOne({
+        name: NAME,
+        shopId: Reaction.getShopId(),
+      });
+
       // Grab the current (latest) cart
       const cart = Cart.findOne({
         userId: Meteor.userId(),
@@ -125,14 +132,12 @@ Meteor.methods({
       if (issuer) {
         paymentInfo.issuer = issuer;
       }
+      // Share the shop locale when enabled
+      if (_.get(packageData, `settings.${NAME}.shopLocale`)) {
+        paymentInfo.locale = getMollieLocale(Reaction.Locale.curValue.language);
+      }
 
       Logger.debug(`Mollie Payment: ${JSON.stringify(paymentInfo)}`);
-
-      // Grab the module configuration
-      const packageData = Packages.findOne({
-        name: NAME,
-        shopId: Reaction.getShopId(),
-      });
 
       // Initialize mollie and create the payment
       const mollie = Mollie({ apiKey: _.get(packageData, `settings.${NAME}.apiKey`) });
