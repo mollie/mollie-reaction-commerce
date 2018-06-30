@@ -63,10 +63,17 @@ class MolliePaymentTagList extends Component {
     });
   };
 
-  handleTagSave = (event, tag) => {
-    if (this.props.onUpdateTag) {
-      this.props.onUpdateTag(tag._id, tag.name);
+  handleTagUpdate = (id, { target: { value }}) => {
+    const tags = _.cloneDeep(this.tags);
+    const tag = _.find(tags, item => item._id == id);
+    if (typeof tag !== "undefined") {
+      tag.name = value;
     }
+    this.setState({
+      methods: tags,
+    }, () => {
+      this.props.onChange(tags);
+    });
   };
 
   generateTagsList(t) {
@@ -86,6 +93,7 @@ class MolliePaymentTagList extends Component {
           selectable={true}
           onMove={this.handleMoveTag}
           onChecked={this.handleChecked}
+          onTagUpdate={this.handleTagUpdate}
         />
       ));
     }

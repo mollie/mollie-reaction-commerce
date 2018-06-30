@@ -30,6 +30,24 @@ class MolliePaymentTagItem extends Component {
     tag: PropTypes.object,
   };
 
+  static defaultProps = {
+    blank: false,
+    connectDragSource: () => {},
+    connectDropTarget: () => {},
+    draggable: false,
+    editable: false,
+    i18nKeyInputPlaceholder: "",
+    index: 0,
+    inputPlaceholder: "",
+    isTagNav: false,
+    onClearSuggestions: () => {},
+    onGetSuggestions: () => {},
+    onTagInputBlur: () => {},
+    onChecked: () => {},
+    suggestions: [],
+    tag: {},
+  };
+
   componentWillReceiveProps(nextProps) {
     if (this._updated && this._saved && this.refs.autoSuggestInput) {
       const { input } = this.refs.autoSuggestInput;
@@ -69,19 +87,11 @@ class MolliePaymentTagItem extends Component {
    * @return {void} no return value
    */
   handleTagInputBlur = (event) => {
-    if (this.props.onTagInputBlur) {
-      this._saved = true;
-      this.props.onTagInputBlur(event, this.props.tag);
-    }
+    this.props.onTagInputBlur(event, this.props.tag);
   };
 
-  handleInputChange = (event, { newValue }) => {
-    if (this.props.onTagUpdate) {
-      const updatedTag = Object.assign({}, { ...this.props.tag }, {
-        name: newValue
-      });
-      this.props.onTagUpdate(event, updatedTag);
-    }
+  handleInputChange = (event) => {
+    this.props.onTagUpdate(this.props.tag._id, event);
   };
 
   handleCheckChange = ({ target: { checked }}) => {
@@ -89,22 +99,16 @@ class MolliePaymentTagItem extends Component {
   };
 
   handleSuggestionsUpdateRequested = (suggestion) => {
-    if (this.props.onGetSuggestions) {
-      this.props.onGetSuggestions(suggestion);
-    }
+    this.props.onGetSuggestions(suggestion);
   };
 
   handleSuggestionsClearRequested = () => {
-    if (this.props.onClearSuggestions) {
-      this.props.onClearSuggestions();
-    }
+    this.props.onClearSuggestions();
   };
 
   handleClick = (event) => {
-    if (this.props.onTagClick) {
-      event.preventDefault();
-      this.props.onTagClick(event, this.props.tag);
-    }
+    event.preventDefault();
+    this.props.onTagClick(event, this.props.tag);
   };
 
   /**

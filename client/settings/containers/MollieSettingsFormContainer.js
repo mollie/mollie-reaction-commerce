@@ -50,7 +50,7 @@ class MollieSettingsFormContainer extends Component {
     const { apiKey, methods } = _.cloneDeep(this.state);
     const { _id: packageId } = _.get(this.props, "packageData", { _id: false });
     if (!packageId) {
-      return Alerts.toast(i18next.t("admin.settings.saveFailed"), "error");
+      return Alerts.toast(i18next.t("admin.settings.saveFailed", { ns: "mollie" }), "error");
     }
 
     const fields = [
@@ -70,9 +70,9 @@ class MollieSettingsFormContainer extends Component {
   saveUpdate = (fields, id, settingsKey) => {
     Meteor.call("mollie/settings/save", id, settingsKey, fields, (err) => {
       if (err) {
-        return Alerts.toast(i18next.t("admin.settings.saveFailed"), "error");
+        return Alerts.toast(i18next.t("admin.settings.saveFailed", { ns: "mollie" }), "error");
       }
-      return Alerts.toast(i18next.t("admin.settings.saveSuccess"), "success");
+      return Alerts.toast(i18next.t("admin.settings.saveSuccess", { ns: "mollie" }), "success");
     });
   };
 

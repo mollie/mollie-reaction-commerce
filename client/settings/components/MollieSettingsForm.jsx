@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import i18next from "i18next";
 
 import { TextField, Translation } from "/imports/plugins/core/ui/client/components";
 
@@ -60,7 +61,7 @@ class MollieSettingsForm extends Component {
           />
 
           <MolliePaymentTagList
-            label="Payment Methods"
+            label={i18next.t("mollie.settings.paymentMethods")}
             onChange={this.onMethodsChange}
             methods={methods}
           />
