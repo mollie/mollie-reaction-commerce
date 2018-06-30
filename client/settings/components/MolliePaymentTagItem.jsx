@@ -4,7 +4,6 @@ import classnames from "classnames";
 import Autosuggest from "react-autosuggest";
 import Velocity from "velocity-animate";
 import "velocity-animate/velocity.ui";
-import _ from "lodash";
 
 import { i18next } from "/client/api";
 import { Button, Handle } from "/imports/plugins/core/ui/client/components";

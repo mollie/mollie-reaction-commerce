@@ -3,13 +3,21 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
-import { getSupportedMethods } from "../../../misc";
 import { Shops } from "/lib/collections";
 import { Reaction } from "/client/api";
+import { Packages } from "/lib/collections";
+
+import IssuerListModal from "./IssuerListModal";
+import { getSupportedMethods } from "../../../misc";
+import { ISSUER_LIST_MODAL, ISSUER_LIST_PAGE, NAME } from "../../../misc/consts";
+import { MollieApiMethod } from "../../../lib/api/src/models";
+
+let packageData;
 
 class MolliePaymentSelector extends Component {
   state = {
     methods: _.get(this.props, 'methods', []),
+    issuerListVisible: false,
   };
 
   static propTypes = {
@@ -24,8 +32,8 @@ class MolliePaymentSelector extends Component {
     }
   }
 
-  static initPayment(method) {
-    Meteor.call("mollie/payment/create", method, null, Meteor.user().profile.lang, (error, result) => {
+  static initPayment(method, issuer = null) {
+    Meteor.call("mollie/payment/create", method, issuer, Meteor.user().profile.lang, (error, result) => {
       if (error || typeof result !== "string") {
         // When an error occurs the message will be embedded in the payment methods box on the checkout page
         Alerts.inline("An error occurred while initializing the payment. Please contact our customer service.", "error", {
@@ -40,7 +48,41 @@ class MolliePaymentSelector extends Component {
     });
   }
 
+  handleClick = (method) => {
+    if (!packageData) {
+      Meteor.wrapAsync(Meteor.subscribe("Packages"));
+      packageData = Packages.findOne({
+        name: NAME,
+        shopId: Reaction.getShopId(),
+      });
+    }
+
+    if (method._id === MollieApiMethod.IDEAL) {
+      const issuerList = _.get(packageData, `settings.${NAME}.issuerList`);
+      switch (issuerList) {
+        case ISSUER_LIST_MODAL:
+          return this.setState({ issuerListVisible: true});
+        case ISSUER_LIST_PAGE:
+          return Reaction.Router.go("/mollie/ideal", {}, {});
+        default:
+          this.constructor.initPayment(method._id);
+      }
+    } else {
+      this.constructor.initPayment(method._id);
+    }
+  };
+
   render() {
+    const { issuerListVisible } = this.state;
+
+    if (!packageData) {
+      Meteor.wrapAsync(Meteor.subscribe("Packages"));
+      packageData = Packages.findOne({
+        name: NAME,
+        shopId: Reaction.getShopId(),
+      });
+    }
+
     // Check method availability against the configuration and currency
     const availableMethods = _.filter(this.state.methods, item => item.enabled && _.includes(getSupportedMethods(Shops.findOne({ _id: Reaction.getShopId() }).currency), item._id));
     if (_.isEmpty(availableMethods)) {
@@ -49,12 +91,17 @@ class MolliePaymentSelector extends Component {
 
     return (
       <div>
+        <IssuerListModal
+          isOpen={issuerListVisible}
+          qrCode={_.get(packageData, `settings.${NAME}.qrCode`, false)}
+          onCancel={() => this.setState({ issuerListVisible: false })}
+        />
         {availableMethods.map((method) => (
           <a
             className="rui btn btn-lg btn-default btn-block"
             style={{ display: "block", height: "60px" }}
             key={method.name}
-            onClick={() => this.constructor.initPayment(method._id)}
+            onClick={() => this.handleClick(method)}
           >
             <div style={{ textAlign: "left", marginRight: "20px", overflow: "hidden", textOverflow: "ellipsis" }}>
               <img src={`https://www.mollie.com/images/payscreen/methods/${method._id}.png`} style={{ display: "inline" }}/>

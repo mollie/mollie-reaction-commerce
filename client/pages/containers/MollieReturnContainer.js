@@ -8,7 +8,7 @@ import { Orders } from "/lib/collections";
 import Translation from "/imports/plugins/core/ui/client/components/translation/translation";
 
 import { MolliePayments } from "../../../collections";
-import { MollieApiPayment } from "../../../lib/api/src/models";
+import { MollieApiPayment, MollieApiMethod } from "../../../lib/api/src/models";
 
 class MollieReturnContainer extends Component {
   render() {
@@ -46,13 +46,16 @@ const composer = (props, onData) => {
         sort: { createdAt: -1 },
       });
       if (_.includes([
+        MollieApiPayment.STATUS_OPEN,
+        MollieApiPayment.STATUS_PENDING,
         MollieApiPayment.STATUS_CANCELED,
         MollieApiPayment.STATUS_EXPIRED,
         MollieApiPayment.STATUS_FAILED,
       ], _.get(molliePayment, 'bankStatus'))) {
         // Back to the checkout
-        console.log(molliePayment);
-        return Reaction.Router.go("cart/checkout", {}, {});
+        if (!(MollieApiPayment.STATUS_OPEN && molliePayment.method === MollieApiMethod.BANKTRANSFER)) {
+          return Reaction.Router.go("cart/checkout", {}, {});
+        }
       }
 
       // Observe orders when there initially isn't one available
@@ -78,13 +81,16 @@ const composer = (props, onData) => {
         .observe({
           changedAt(molliePayment) {
             if (_.includes([
+              MollieApiPayment.STATUS_OPEN,
+              MollieApiPayment.STATUS_PENDING,
               MollieApiPayment.STATUS_CANCELED,
               MollieApiPayment.STATUS_EXPIRED,
               MollieApiPayment.STATUS_FAILED,
             ], molliePayment.bankStatus)) {
               // Back to the checkout
-              console.log(molliePayment);
-              return Reaction.Router.go("cart/checkout", {}, {});
+              if (!(MollieApiPayment.STATUS_OPEN && molliePayment.method === MollieApiMethod.BANKTRANSFER)) {
+                return Reaction.Router.go("cart/checkout", {}, {});
+              }
             }
           }
         })

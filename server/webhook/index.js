@@ -1,4 +1,5 @@
 import { Meteor } from "meteor/meteor";
+import { Promise } from "meteor/promise";
 import { Random } from "meteor/random";
 import _ from "lodash";
 import util from "util";

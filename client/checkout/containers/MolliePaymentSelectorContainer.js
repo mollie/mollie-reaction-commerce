@@ -4,18 +4,14 @@ import _ from "lodash";
 
 import { Reaction } from "/client/api";
 import { Packages } from "/lib/collections"
-import { composeWithTracker } from "/imports/plugins/core/components/lib/composer";
+import { composeWithTracker } from "/imports/plugins/core/components/lib";
 
 import MolliePaymentSelector from "../components/MolliePaymentSelector";
 import { NAME } from "../../../misc/consts";
 
 class MolliePaymentSelectorContainer extends Component {
   render() {
-    return(
-      <MolliePaymentSelector
-        {...this.props}
-      />
-    );
+    return <MolliePaymentSelector{...this.props}/>;
   }
 }
 

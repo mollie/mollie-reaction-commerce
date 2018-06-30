@@ -1,5 +1,6 @@
 /* eslint camelcase: 0 */
 import { Meteor } from "meteor/meteor";
+import { Promise } from "meteor/promise";
 import { check, Match } from "meteor/check";
 import util from "util";
 import _ from "lodash";
@@ -74,7 +75,7 @@ Meteor.methods({
     }
   },
 
-  "mollie/payment/create"(method, issuer, locale = null) {
+  "mollie/payment/create"(method, issuer = null, locale = null) {
     // Check all arguments
     check(method, String);
     check(issuer, Match.Maybe(String));
@@ -269,9 +270,45 @@ Meteor.methods({
           return results;
         } catch (e) {
           Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
-          reject(Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds"));
+          throw new Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds");
         }
     } catch (e) {
+      if (e.error && e.reason) {
+        throw new Meteor.Error(e.error, e.reason);
+      }
+
+      Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
+      throw new Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds");
+    }
+  },
+
+  /**
+   * List refunds
+   * @method
+   * @memberof Payment/Mollie/Methods
+   * @return {Object} result
+   */
+  "mollie/ideal/list"() {
+    try {
+      const packageData = Packages.findOne({
+        name: NAME,
+        shopId: Reaction.getShopId(),
+      });
+
+      try {
+        // Grab the API key and initialize the Mollie client
+        const mollie = Mollie({ apiKey: _.get(packageData, `settings.${NAME}.apiKey`) });
+        // Get the refund list for the transaction ID
+        return Promise.await(mollie.methods.get("ideal", { include: "issuers" }));
+      } catch (e) {
+        Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
+        throw new Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds");
+      }
+    } catch (e) {
+      if (e.error && e.reason) {
+        throw new Meteor.Error(e.error, e.reason);
+      }
+
       Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
       throw new Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds");
     }
