@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
-import { getSupportedMethods } from "../../../misc/paymentmethods";
+import { getSupportedMethods } from "../../../misc";
 import { Shops } from "/lib/collections";
 import { Reaction } from "/client/api";
 

@@ -18,6 +18,27 @@ export const supportedCurrencies = {
   sofort: ["eur"],
 };
 
+
+// en_US nl_NL nl_BE fr_FR fr_BE de_DE de_AT de_CH es_ES ca_ES pt_PT it_IT nb_NO sv_SE fi_FI da_DK is_IS hu_HU pl_PL lv_LV lt_LT
+export const mollieLocales = {
+  "nl": ["nl_NL", "nl_BE"],
+  "en": ["en_US"],
+  "fr": ["fr_FR", "fr_BE"],
+  "de": ["de_DE", "de_AT", "de_CH"],
+  "es": ["es_ES", "ca_ES"],
+  "pt": ["pt_PT"],
+  "it": ["it_IT"],
+  "no": ["nb_NO"],
+  "sv": ["sv_SE"],
+  "fi": ["fi_FI"],
+  "da": ["da_DK"],
+  "is": ["is_IS"],
+  "hu": ["hu_HU"],
+  "pl": ["pl_PL"],
+  "lv": ["lv_LV"],
+  "lt": ["lt_LT"],
+};
+
 export const getSupportedMethods = (currency) => {
   const methods = [];
   _.forEach(supportedCurrencies, (currencies, method) => {
@@ -27,6 +48,10 @@ export const getSupportedMethods = (currency) => {
   });
 
   return methods;
+};
+
+export const getMollieLocale = (langIso) => {
+  return _.get(mollieLocales, `${langIso}[0]`, "en_US");
 };
 
 export default supportedCurrencies;

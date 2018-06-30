@@ -7,7 +7,17 @@
       "settings": {
         "apiKeyMissing": "API Key is Missing",
         "noPaymentMethodsFound": "No payment methods found. Make sure the API key is correct and that you have enabled at least one payment method.",
-        "paymentMethods": "Payment Methods"
+        "paymentMethods": "Payment Methods",
+        "sendLocalePaymentScreen": "Send locale for payment screen",
+        "doNotSendLocale": "Do not send locale - use browser language",
+        "sendLocale": "Send locale for payment screen",
+        "enableIdealQr": "Enable iDEAL QR codes",
+        "description": "Description",
+        "enterADescriptionHere": "Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters.",
+        "issuerList": "Issuer list",
+        "onClick": "On click",
+        "ownPage": "Own page",
+        "paymentScreen": "Payment screen"
       },
       "payment": {
         "paymentInitError": "An error occurred while initializing the payment. Please contact our customer service."

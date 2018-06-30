@@ -14,6 +14,10 @@ class MollieSettingsFormContainer extends Component {
   state = {
     apiKey: _.get(this.props, `packageData.settings.${NAME}.apiKey`, ""),
     methods: _.get(this.props, `packageData.settings.${NAME}.methods`, []),
+    shopLocale: _.get(this.props, `packageData.settings.${NAME}.shopLocale`, []),
+    idealQr: _.get(this.props, `packageData.settings.${NAME}.idealQr`, []),
+    issuerList: _.get(this.props, `packageData.settings.${NAME}.issuerList`, []),
+    description: _.get(this.props, `packageData.settings.${NAME}.description`, []),
   };
 
   static propTypes = {
@@ -35,19 +39,43 @@ class MollieSettingsFormContainer extends Component {
         return this.handleApiKeyChange(value);
       case "methods":
         return this.handleMethodsChange(value);
+      case "shopLocale":
+        return this.handleShopLocaleChange(value);
+      case "idealQr":
+        return this.handleIdealQrChange(value);
+      case "issuerList":
+        return this.handleIssuerListchange(value);
+      case "description":
+        return this.handleDescriptionChange(value);
     }
   };
 
-  handleApiKeyChange = (e) => {
-    this.setState({ apiKey: e.target.value });
+  handleApiKeyChange = ({ target: { value: apiKey }}) => {
+    this.setState({ apiKey });
   };
 
   handleMethodsChange = (methods) => {
     this.setState({ methods });
   };
+  
+  handleShopLocaleChange = (shopLocale) => {
+    this.setState({ shopLocale });
+  };
+  
+  handleIdealQrChange = (idealQr) => {
+    this.setState({ idealQr });
+  };
+
+  handleIssuerListchange = (issuerList) => {
+    this.setState({ issuerList });
+  };
+  
+  handleDescriptionChange = ({ target: { value: description }}) => {
+    this.setState({ description });
+  };
 
   handleSubmit = () => {
-    const { apiKey, methods } = _.cloneDeep(this.state);
+    const { apiKey, methods, shopLocale, idealQr, issuerList, description } = _.cloneDeep(this.state);
     const { _id: packageId } = _.get(this.props, "packageData", { _id: false });
     if (!packageId) {
       return Alerts.toast(i18next.t("admin.settings.saveFailed", { ns: "mollie" }), "error");
@@ -61,6 +89,22 @@ class MollieSettingsFormContainer extends Component {
       {
         property: "methods",
         value: methods,
+      },
+      {
+        property: "shopLocale",
+        value: shopLocale,
+      },
+      {
+        property: "idealQr",
+        value: idealQr,
+      },
+      {
+        property: "issuerList",
+        value: issuerList,
+      },
+      {
+        property: "description",
+        value: description,
       },
     ];
 

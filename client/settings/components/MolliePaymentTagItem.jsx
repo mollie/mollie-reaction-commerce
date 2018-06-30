@@ -81,15 +81,6 @@ class MolliePaymentTagItem extends Component {
     return suggestion.label;
   }
 
-  /**
-   * Handle tag inout blur events and pass them up the component chain
-   * @param  {Event} event Event object
-   * @return {void} no return value
-   */
-  handleTagInputBlur = (event) => {
-    this.props.onTagInputBlur(event, this.props.tag);
-  };
-
   handleInputChange = (event) => {
     this.props.onTagUpdate(this.props.tag._id, event);
   };
@@ -235,7 +226,7 @@ class MolliePaymentTagItem extends Component {
               // options.onUpdateCallback && options.onUpdateCallback();
             }
           },
-          onBlur: this.handleTagInputBlur,
+          onBlur: () => {},
           onChange: this.handleInputChange
         }}
         onSuggestionsClearRequested={this.handleSuggestionsClearRequested}

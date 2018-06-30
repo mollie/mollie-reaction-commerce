@@ -1,5 +1,6 @@
 /* eslint camelcase: 0 */
 import { Reaction } from "/server/api";
+import { ISSUER_LIST_MODAL } from "./misc/consts";
 
 Reaction.registerPackage({
   label: "Mollie",
@@ -21,6 +22,10 @@ Reaction.registerPackage({
         "Capture",
         "Refund",
       ],
+      shopLocale: false,
+      idealQr: false,
+      issuerList: ISSUER_LIST_MODAL,
+      description: "Cart %",
     },
   },
   registry: [
