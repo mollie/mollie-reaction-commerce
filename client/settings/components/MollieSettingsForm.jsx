@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 import i18next from "i18next";
 
-import { TextField, Translation, Checkbox, Select } from "/imports/plugins/core/ui/client/components";
+import { TextField, Translation, Select } from "/imports/plugins/core/ui/client/components";
+import Checkbox from "./Checkbox";
 
 import MolliePaymentTagList from "./MolliePaymentTagList";
 import { ISSUER_LIST_MODAL, ISSUER_LIST_PAGE, ISSUER_LIST_MOLLIE } from "../../../misc/consts";
