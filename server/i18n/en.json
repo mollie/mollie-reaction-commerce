@@ -13,7 +13,7 @@
         "sendLocale": "Send locale for payment screen",
         "enableIdealQr": "Enable iDEAL QR codes",
         "description": "Description",
-        "enterADescriptionHere": "Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters.",
+        "enterADescriptionHere": "Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters. You can use the following variables: {cart.id} {customer.name}",
         "issuerList": "Issuer list",
         "onClick": "On click",
         "ownPage": "Own page",

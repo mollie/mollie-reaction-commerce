@@ -13,7 +13,7 @@
         "sendLocale": "Stuur webwinkel locale",
         "enableIdealQr": "iDEAL-QR inschakelen",
         "description": "Beschrijving",
-        "enterADescriptionHere": "Vul hier een omschrijving in. Sommige betaalmethoden kunnen een karakterlimiet hebben; het is verstandig om 29 tekens of minder te gebruiken. U kunt hier de volgende variabelen gebruiken: {cart.id} {customer.firstname} {customer.lastname} {customer.company}",
+        "enterADescriptionHere": "Vul hier een omschrijving in. Sommige betaalmethoden kunnen een karakterlimiet hebben; het is verstandig om 29 tekens of minder te gebruiken. U kunt hier de volgende variabelen gebruiken: {cart.id} {customer.name}",
         "issuerList": "Bankenlijst",
         "onClick": "Zichtbaar na klikken betaalmethode",
         "ownPage": "Tonen op aparte pagina",

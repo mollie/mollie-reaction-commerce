@@ -100,13 +100,18 @@ Meteor.methods({
 
       const value = cart.getTotal();
 
+      let description = _.get(packageData, `settings.${NAME}.description`, 'Cart %');
+      description = description.replace(/%/, cart._id);
+      description = description.replace(/{cart\.id}/, cart._id);
+      description = description.replace(/{customer\.name}/, _.get(cart, "shipping[0].address.fullName", ""));
+
       // Grab the payment info
       const paymentInfo = {
         amount: {
           value: parseFloat(_.toString(value)).toFixed(2),
           currency,
         },
-        description: `Cart ${cart._id}`,
+        description,
         redirectUrl: `${Meteor.absoluteUrl()}mollie/return?cartId=${cart._id}`, // By the time the visitor returns, the cart ID has changed, adding it to the query for cart recovery
         webhookUrl: `${Meteor.absoluteUrl()}mollie/webhook?cartId=${cart._id}`, // We're unable to access the webhook's content since Reaction only exposes JSON functionality
         billingEmail: _.get(account, "email[0].address"),
