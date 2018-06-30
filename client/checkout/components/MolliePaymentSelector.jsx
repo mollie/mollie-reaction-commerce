@@ -27,18 +27,21 @@ class MolliePaymentSelector extends Component {
   static initPayment(method) {
     Meteor.call("mollie/payment/create", method, (error, result) => {
       if (error || typeof result !== "string") {
+        // When an error occurs the message will be embedded in the payment methods box on the checkout page
         Alerts.inline("An error occurred while initializing the payment. Please contact our customer service.", "error", {
           placement: "paymentMethod",
           i18nKey: "mollie.payment.paymentInitError",
           autoHide: 10000,
         });
       } else {
+        // Redirect to the payment screen
         window.location.href = result;
       }
     });
   }
 
   render() {
+    // Check method availability against the configuration and currency
     const availableMethods = _.filter(this.state.methods, item => item.enabled && _.includes(getSupportedMethods(Shops.findOne({ _id: Reaction.getShopId() }).currency), item._id));
     if (_.isEmpty(availableMethods)) {
       return null;

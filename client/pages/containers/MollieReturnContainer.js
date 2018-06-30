@@ -22,16 +22,19 @@ class MollieReturnContainer extends Component {
 }
 
 const composer = (props, onData) => {
+  // The return page fully utilizes Meteor's DDP, so in case a webhook is delayed we still have the change to redirect
+  // the visitor to the confirmation page
   Meteor.subscribe("Orders");
   const cartId = Reaction.Router.getQueryParam("cartId");
   if (cartId) {
+    // Get the order if available
     const order = Orders.findOne({
       cartId,
     });
     if (order) {
       Reaction.Router.go("cart/completed", {}, { _id: cartId });
     } else {
-      // Observe orders
+      // Observe orders is initially there is no order available
       Orders.find({
         cartId,
       }, {
