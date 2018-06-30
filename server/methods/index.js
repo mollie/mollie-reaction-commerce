@@ -139,6 +139,7 @@ Meteor.methods({
       const payment = Promise.await(mollie.payments.create(paymentInfo));
       MolliePayments.insert({
         transactionId: payment.id,
+        userId: this.userId,
         cartId: cart._id,
         method: payment.method,
         bankStatus: payment.status,
@@ -184,6 +185,7 @@ Meteor.methods({
         shopId: Reaction.getShopId(),
       });
       const dbPayment = MolliePayments.findOne({
+        userId: Meteor.userId(),
         transactionId,
       });
       if (!dbPayment) {

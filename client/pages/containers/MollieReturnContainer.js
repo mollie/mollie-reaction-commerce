@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
+import _ from "lodash";
 
 import { Reaction } from "/client/api";
 import { composeWithTracker } from "/imports/plugins/core/components/lib/composer";
 import { Orders } from "/lib/collections";
 import Translation from "/imports/plugins/core/ui/client/components/translation/translation";
+
+import { MolliePayments } from "../../../collections";
+import { MollieApiPayment } from "../../../lib/api/src/models";
 
 class MollieReturnContainer extends Component {
   render() {
@@ -25,6 +29,7 @@ const composer = (props, onData) => {
   // The return page fully utilizes Meteor's DDP, so in case a webhook is delayed we still have the change to redirect
   // the visitor to the confirmation page
   Meteor.subscribe("Orders");
+  Meteor.subscribe("MolliePayments");
   const cartId = Reaction.Router.getQueryParam("cartId");
   if (cartId) {
     // Get the order if available
@@ -32,9 +37,25 @@ const composer = (props, onData) => {
       cartId,
     });
     if (order) {
-      Reaction.Router.go("cart/completed", {}, { _id: cartId });
+      return Reaction.Router.go("cart/completed", {}, { _id: cartId });
     } else {
-      // Observe orders is initially there is no order available
+      // No order found. Check if the payment might have been canceled, expired or failed.
+      const molliePayment = MolliePayments.findOne({
+        cartId,
+      }, {
+        sort: { createdAt: -1 },
+      });
+      if (_.includes([
+        MollieApiPayment.STATUS_CANCELED,
+        MollieApiPayment.STATUS_EXPIRED,
+        MollieApiPayment.STATUS_FAILED,
+      ], _.get(molliePayment, 'bankStatus'))) {
+        // Back to the checkout
+        console.log(molliePayment);
+        return Reaction.Router.go("cart/checkout", {}, {});
+      }
+
+      // Observe orders when there initially isn't one available
       Orders.find({
         cartId,
       }, {
@@ -42,14 +63,37 @@ const composer = (props, onData) => {
       })
         .observe({
           changedAt(order) {
-            if (order) {
-              Reaction.Router.go("cart/completed", {}, { _id: order.cartId });
-            }
+            // Order found. Continue to the order confirmation page.
+            Reaction.Router.go("cart/completed", {}, { _id: order.cartId });
           }
         });
+
+      // Also keep an eye on other statuses, such as expired, canceled and failed
+      MolliePayments.find({
+        cartId,
+      }, {
+        sort: { createdAt: -1 },
+        limit: 1,
+      })
+        .observe({
+          changedAt(molliePayment) {
+            if (_.includes([
+              MollieApiPayment.STATUS_CANCELED,
+              MollieApiPayment.STATUS_EXPIRED,
+              MollieApiPayment.STATUS_FAILED,
+            ], molliePayment.bankStatus)) {
+              // Back to the checkout
+              console.log(molliePayment);
+              return Reaction.Router.go("cart/checkout", {}, {});
+            }
+          }
+        })
     }
 
     onData(null, {});
+  } else {
+    // No Cart ID found, back to the homepage
+    Reaction.Router.go("/", {}, {});
   }
 };
 

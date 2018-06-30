@@ -16,6 +16,13 @@ export const MollieQrCodesSchema = new SimpleSchema({
     type: String,
     label: "Transaction ID"
   },
+  userId: {
+    type: String,
+    label: "User ID",
+    autoValue: function() {
+      return this.userId;
+    },
+  },
   cartId: {
     type: String,
     label: "Cart ID"

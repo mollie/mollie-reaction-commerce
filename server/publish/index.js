@@ -1,6 +1,5 @@
 import { Meteor } from "meteor/meteor";
 
-import { PaymentMethodArgument } from "/lib/collections/schemas";
 import { Packages, Cart } from "/lib/collections";
 
 import { NAME } from "../../misc/consts";
@@ -24,5 +23,16 @@ Meteor.publish("mollie/methods/list", (shopId) => {
 Meteor.publish("mollie/payment/status", () => {
   return MolliePayments.find({
     cartId: Cart.findOne()._id,
+    userId: Meteor.userId(),
+  });
+});
+
+Meteor.publish("MolliePayments", () => {
+  return MolliePayments.find({
+    userId: Meteor.userId(),
+  }, {
+    fields: {
+      transactionId: 0,
+    },
   });
 });
