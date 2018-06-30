@@ -139,7 +139,7 @@ class MollieSettingsForm extends Component {
           </div>
 
           <TextField
-            lable="Description"
+            label="Description"
             i18nKeyLabel="mollie.settings.description"
             name="cartDescription"
             type="text"
