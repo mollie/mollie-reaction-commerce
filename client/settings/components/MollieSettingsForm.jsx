@@ -117,7 +117,7 @@ class MollieSettingsForm extends Component {
 
           <div className="rui multiselect form-group">
             <label>
-              <Translation i18nKey="mollie.settings.shopLocalePaymentScreen" defaultValue="Send webshop locale"/>
+              <Translation i18nKey="mollie.settings.shopLocalePaymentScreen"/>
             </label>
             <Select
               searchable={false}
@@ -129,7 +129,7 @@ class MollieSettingsForm extends Component {
 
           <div className="rui multiselect form-group">
             <label>
-              <Translation i18nKey="mollie.settings.issuerList" defaultValue="Issuer list"/>
+              <Translation i18nKey="mollie.settings.issuerList"/>
             </label>
             <Select
               searchable={false}
@@ -140,18 +140,16 @@ class MollieSettingsForm extends Component {
           </div>
 
           <TextField
-            label="Description"
             i18nKeyLabel="mollie.settings.description"
             name="cartDescription"
             type="text"
             onChange={this.onDescriptionChange}
             value={description}
-            helpText="Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters."
             i18nKeyHelpText="mollie.settings.enterADescriptionHere"
           />
 
           <button className="btn btn-primary pull-right" type="submit">
-            <Translation defaultValue="Save Changes" i18nKey="app.saveChanges"/>
+            <Translation i18nKey="app.saveChanges"/>
           </button>
         </form>
 

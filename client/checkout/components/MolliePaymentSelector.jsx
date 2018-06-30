@@ -84,7 +84,10 @@ class MolliePaymentSelector extends Component {
     }
 
     // Check method availability against the configuration and currency
-    const availableMethods = _.filter(this.state.methods, item => item.enabled && _.includes(getSupportedMethods(Shops.findOne({ _id: Reaction.getShopId() }).currency), item._id));
+    const availableMethods = _.filter(
+      this.state.methods,
+      (item) => item.enabled && _.includes(getSupportedMethods(Shops.findOne({ _id: Reaction.getShopId() }).currency), item._id)
+    );
     if (_.isEmpty(availableMethods)) {
       return null;
     }

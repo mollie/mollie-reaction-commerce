@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { Button, Translation } from "../../../../../core/ui/client/components";
+import { Button, Translation } from "/imports/plugins/core/ui/client/components";
 
 class ButtonSelect extends Component {
   static propTypes = {
@@ -78,7 +78,7 @@ class ButtonSelect extends Component {
     return this.setState({
       toggle: "hidden",
       toggleClassNames: className,
-      toggleIcon: classnames({ "fa": true, "fa-chevron-down": true, "text-center": true, "fa-icon": true })
+      toggleIcon: classnames({ "fa": true, "fa-chevron-down": true, "text-center": true, "fa-icon": true }),
     });
   };
 
@@ -117,11 +117,11 @@ class ButtonSelect extends Component {
             tagName="div"
             className={{
               "btn": false,
-              "button-toggle": true
+              "button-toggle": true,
             }}
             onClick={this.handleToggle}
           >
-            <i className={toggleIcon} aria-hidden="true" />
+            <i className={toggleIcon} aria-hidden="true"/>
           </Button>
         </div>
         <div className={toggleClassNames}>

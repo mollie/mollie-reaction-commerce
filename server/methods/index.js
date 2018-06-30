@@ -117,14 +117,20 @@ Meteor.methods({
         webhookUrl: `${Meteor.absoluteUrl()}mollie/webhook?cartId=${cart._id}`, // We're unable to access the webhook's content since Reaction only exposes JSON functionality
         billingEmail: _.get(account, "email[0].address"),
         shippingAddress: {
-          streetAndNumber: _.trim(_.get(cart, "shipping[0].address.address1", "") + " " + _.get(cart, "shipping[0].address.address2", "")),
+          streetAndNumber:
+            _.trim(_.get(cart, "shipping[0].address.address1", "")
+            + " "
+            + _.get(cart, "shipping[0].address.address2", "")),
           city: _.get(cart, "shipping[0].address.city"),
           region: _.get(cart, "shipping[0].address.region"),
           postalCode: _.get(cart, "shipping[0].address.postal"),
           country: _.get(cart, "shipping[0].address.country"),
         },
         billingAddress: {
-          streetAndNumber: _.trim(_.get(cart, "billing[0].address.address1", "") + " " + _.get(cart, "billing[0].address.address2", "")),
+          streetAndNumber:
+            _.trim(_.get(cart, "billing[0].address.address1", "")
+              + " "
+              + _.get(cart, "billing[0].address.address2", "")),
           city: _.get(cart, "billing[0].address.city", ""),
           region: _.get(cart, "billing[0].address.region"),
           postalCode: _.get(cart, "billing[0].address.postal"),

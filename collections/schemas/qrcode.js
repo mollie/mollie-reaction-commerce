@@ -3,7 +3,6 @@ import { check } from "meteor/check";
 import { Tracker } from "meteor/tracker";
 import { registerSchema } from "@reactioncommerce/schemas";
 import { createdAtAutoValue, updatedAtAutoValue } from "/imports/collections/schemas/helpers";
-import { Mongo } from "meteor/mongo";
 
 /**
  * @name MolliePayment

@@ -68,7 +68,10 @@ export default class IssuerList extends Component {
     return (
       <div>
         <strong>
-          <Translation defaultValue="Select a bank" i18nKey="mollie.issuers.selectABank" style={{ marginBottom: '6px', display: 'block' }}/>
+          <Translation
+            i18nKey="mollie.issuers.selectABank"
+            style={{ marginBottom: "6px", display: "block" }}
+          />
         </strong>
         {banks.length ?
         <ButtonSelect
@@ -77,13 +80,13 @@ export default class IssuerList extends Component {
         /> : null}
         {qrCode ?
           <div>
-            <div style={{ width: '100%', height: '24px', borderBottom: '1px solid black', textAlign: 'center' }}>
-            <span style={{ fontSize: '30px', backgroundColor: '#fff', padding: '0 10px' }}>
-              <Translation defaultValue="or" i18nKey="mollie.issuers.or"/>
+            <div style={{ width: "100%", height: "24px", borderBottom: "1px solid black", textAlign: "center" }}>
+            <span style={{ fontSize: "30px", backgroundColor: "#fff", padding: "0 10px" }}>
+              <Translation i18nKey="mollie.issuers.or"/>
             </span>
             </div>
             <br />
-            <strong><Translation defaultValue = "Scan the QR code" i18nKey="mollie.issuers.scanTheQrCode"/></strong>
+            <strong><Translation i18nKey="mollie.issuers.scanTheQrCode"/></strong>
           </div> : null }
       </div>
     );

@@ -16,8 +16,10 @@ class MollieReturnContainer extends Component {
       <div className="completed-order-container">
         <div className="container order-completed">
           <div className="order-details-header">
-            <h3><Translation i18nKey="mollie.return.welcomeBack" defaultValue="Welcome back!"/></h3>
-            <p><Translation i18nKey="mollie.return.notReceivedPaymentStatus" defaultValue="We have not yet received a definite payment status. You will be notified once your payment has been accepted."/></p>
+            <h3><Translation i18nKey="mollie.return.welcomeBack"/></h3>
+            <p>
+              <Translation i18nKey="mollie.return.notReceivedPaymentStatus"/>
+            </p>
           </div>
         </div>
       </div>

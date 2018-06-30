@@ -103,7 +103,7 @@ class MolliePaymentTagList extends Component {
     if (_.isEmpty(this.tags)) {
       return (
         <div className="alert alert-info">
-          <Translation defaultValue="No payment methods found. Make sure the API key is correct and that you have enabled at least one payment method." i18nKey="mollie.settings.noPaymentMethodsFound"/>
+          <Translation i18nKey="mollie.settings.noPaymentMethodsFound"/>
         </div>
       )
     }
