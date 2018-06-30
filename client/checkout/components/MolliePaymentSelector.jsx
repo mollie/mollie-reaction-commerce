@@ -6,7 +6,6 @@ import _ from "lodash";
 import { getSupportedMethods } from "../../../misc";
 import { Shops } from "/lib/collections";
 import { Reaction } from "/client/api";
-import { getShopLang } from "/lib/api";
 
 class MolliePaymentSelector extends Component {
   state = {
