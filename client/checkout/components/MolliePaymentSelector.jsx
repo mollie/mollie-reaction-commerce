@@ -93,7 +93,7 @@ class MolliePaymentSelector extends Component {
       <div>
         <IssuerListModal
           isOpen={issuerListVisible}
-          qrCode={_.get(packageData, `settings.${NAME}.qrCode`, false)}
+          qrCode={_.get(packageData, `settings.${NAME}.idealQr`, false)}
           onCancel={() => this.setState({ issuerListVisible: false })}
         />
         {availableMethods.map((method) => (
