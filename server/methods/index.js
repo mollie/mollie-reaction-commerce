@@ -20,9 +20,9 @@ import { getMollieLocale } from "../../misc";
 Meteor.methods({
   "mollie/settings/save"(id, settingsKey, fields) {
     // Check all arguments
-    check(id, Match.Any);
-    check(settingsKey, Match.Any);
-    check(fields, Match.Any);
+    check(id, String);
+    check(settingsKey, String);
+    check(fields, Array);
 
     try {
         // Grab the payment methods from the list that is going to be saved
@@ -74,10 +74,11 @@ Meteor.methods({
     }
   },
 
-  "mollie/payment/create"(method, issuer) {
+  "mollie/payment/create"(method, issuer, locale = null) {
     // Check all arguments
     check(method, String);
     check(issuer, Match.Maybe(String));
+    check(locale, Match.Maybe(String));
 
     try {
       // Grab the module configuration
@@ -133,8 +134,8 @@ Meteor.methods({
         paymentInfo.issuer = issuer;
       }
       // Share the shop locale when enabled
-      if (_.get(packageData, `settings.${NAME}.shopLocale`)) {
-        paymentInfo.locale = getMollieLocale(Reaction.Locale.curValue.language);
+      if (locale && _.get(packageData, `settings.${NAME}.shopLocale`)) {
+        paymentInfo.locale = getMollieLocale(locale);
       }
 
       Logger.debug(`Mollie Payment: ${JSON.stringify(paymentInfo)}`);

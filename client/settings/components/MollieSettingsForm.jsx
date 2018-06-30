@@ -77,7 +77,7 @@ class MollieSettingsForm extends Component {
 
     const shopLocaleOptions = [
         { value: false, label: i18next.t("mollie.settings.doNotSendLocale") },
-        { value: true, label: i18next.t("mollie.settings.shopLocale") },
+        { value: true, label: i18next.t("mollie.settings.sendLocale") },
     ];
 
     const issuerListOptions = [

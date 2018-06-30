@@ -6,6 +6,7 @@ import _ from "lodash";
 import { getSupportedMethods } from "../../../misc";
 import { Shops } from "/lib/collections";
 import { Reaction } from "/client/api";
+import { getShopLang } from "/lib/api";
 
 class MolliePaymentSelector extends Component {
   state = {
@@ -25,7 +26,7 @@ class MolliePaymentSelector extends Component {
   }
 
   static initPayment(method) {
-    Meteor.call("mollie/payment/create", method, (error, result) => {
+    Meteor.call("mollie/payment/create", method, null, Meteor.user().profile.lang, (error, result) => {
       if (error || typeof result !== "string") {
         // When an error occurs the message will be embedded in the payment methods box on the checkout page
         Alerts.inline("An error occurred while initializing the payment. Please contact our customer service.", "error", {
