@@ -20,6 +20,8 @@ const processWebhook = (req, res) => {
     shopId: Reaction.getShopId(),
   });
 
+  // Keep track of the amount of successful requests
+  let successful = 0;
   try {
     // Get the API key and initialize the Mollie client
     const mollie = Mollie({ apiKey: _.get(packageData, `settings.${NAME}.apiKey`)});
@@ -53,7 +55,13 @@ const processWebhook = (req, res) => {
     // Process all the payments that have been found
     dbPayments.map(dbPayment => {
       // Get the payment
-      const molliePayment = Promise.await(mollie.payments.get(dbPayment.transactionId));
+      let molliePayment;
+      try {
+        molliePayment = Promise.await(mollie.payments.get(dbPayment.transactionId));
+      } catch (e) {
+        Logger.error(JSON.stringify(util.inspect(e)));
+        return;
+      }
       // Set the new status in the database
       MolliePayments.update({
         transactionId: molliePayment.id,
@@ -125,6 +133,7 @@ const processWebhook = (req, res) => {
           Meteor.call("inventory/clearReserve", _.get(order, "items", _.get(cart, "items", [])));
         }
       });
+      successful++;
     });
   } catch (err) {
     Logger.error(`Mollie Webhook Error: ${JSON.stringify(util.inspect(err))}`);
@@ -138,7 +147,7 @@ const processWebhook = (req, res) => {
 
   return Reaction.Endpoints.sendResponse(res, {
     data: {
-      success: true,
+      success: !!successful,
     },
   });
 };
