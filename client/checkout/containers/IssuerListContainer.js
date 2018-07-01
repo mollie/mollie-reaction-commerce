@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 import _ from "lodash";
 
@@ -10,6 +11,12 @@ let banks;
 let selectedBank;
 
 class IssuerListContainer extends Component {
+  static propTypes = {
+    qrCode: PropTypes.bool,
+    submit: PropTypes.bool,
+    onChange: PropTypes.func,
+  };
+
   render() {
     return <IssuerList {...this.props}/>;
   }

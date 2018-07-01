@@ -8,6 +8,7 @@ import ButtonSelect from "./ButtonSelect";
 export default class IssuerList extends Component {
   static propTypes = {
     banks: PropTypes.arrayOf(PropTypes.object),
+    selectedBank: PropTypes.string,
     qrCode: PropTypes.bool,
     submit: PropTypes.bool,
     onChange: PropTypes.func,
@@ -66,7 +67,7 @@ export default class IssuerList extends Component {
       };
     });
     return (
-      <div>
+      <div style={{ backgroundColor: "inherit" }}>
         <strong>
           <Translation
             i18nKey="mollie.issuers.selectABank"
@@ -79,14 +80,35 @@ export default class IssuerList extends Component {
           onChange={this.handleBankChange}
         /> : null}
         {qrCode ?
-          <div>
-            <div style={{ width: "100%", height: "24px", borderBottom: "1px solid black", textAlign: "center" }}>
-            <span style={{ fontSize: "30px", backgroundColor: "#fff", padding: "0 10px" }}>
+          <div style={{ backgroundColor: "inherit" }}>
+            <div
+              style={{
+                width: "100%",
+                height: "24px",
+                borderBottom: "1px solid black",
+                textAlign: "center",
+                backgroundColor: "inherit",
+              }}
+            >
+            <span
+              style={{
+                fontSize: "30px",
+                backgroundColor: "inherit",
+                padding: "0 10px",
+              }}>
               <Translation i18nKey="mollie.issuers.or"/>
             </span>
             </div>
             <br />
             <strong><Translation i18nKey="mollie.issuers.scanTheQrCode"/></strong>
+            <img
+              src="https://qr2.ideal.nl/ideal-qr/qr/get/b3ada671-6534-44de-a823-5df34c494ac0"
+              alt="iDEAL QR code"
+              style={{
+                width: "400px",
+                height: "400px",
+              }}
+            />
           </div> : null }
       </div>
     );

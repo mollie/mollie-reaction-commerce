@@ -48,5 +48,10 @@ Reaction.registerPackage({
       template: "mollieReturn",
       workflow: "coreWorkflow",
     },
+    {
+      route: "/mollie/ideal",
+      template: "mollieIdeal",
+      workflow: "coreWorkflow",
+    },
   ],
 });

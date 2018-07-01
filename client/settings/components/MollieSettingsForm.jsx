@@ -140,11 +140,13 @@ class MollieSettingsForm extends Component {
           </div>
 
           <TextField
+            label="Description"
             i18nKeyLabel="mollie.settings.description"
             name="cartDescription"
             type="text"
             onChange={this.onDescriptionChange}
             value={description}
+            helpText="Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters."
             i18nKeyHelpText="mollie.settings.enterADescriptionHere"
           />
 

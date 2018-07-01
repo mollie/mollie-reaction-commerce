@@ -77,7 +77,7 @@ class IssuerListModal extends Component {
         <div>
           <div className="modal-backdrop fade in" id={`modal-backdrop-${uniqueId}`}/>
           <div className="modal fade in" id={`modal-${uniqueId}`} style={{ display: "block" }}>
-            <div className="modal-dialog" style={{ maxWidth: '440px' }}>
+            <div className="modal-dialog" style={{ maxWidth: '440px', margin: "10px auto" }}>
               <form className="modal-content" onSubmit={this.handleSubmit}>
                 <div className="modal-header">
                   <h4 className="modal-title">{name}</h4>

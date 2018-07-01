@@ -23,7 +23,7 @@ class MollieReturnContainer extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 

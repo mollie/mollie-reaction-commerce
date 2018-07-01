@@ -41,8 +41,12 @@ class ButtonSelect extends Component {
         status={defaultButton.status}
         bezelStyle="solid"
         label={defaultButton.name}
-        i18nKeyLabel={defaultButton.i18nKeyLabel}
         type={defaultButton.buttonType}
+        style={{
+          textAlign: "left",
+          borderRadius: 0,
+        }}
+        onClick={this.handleToggle}
       />
     );
 
@@ -91,6 +95,11 @@ class ButtonSelect extends Component {
         label={button.name}
         i18nKeyLabel={button.i18nKeyLabel}
         type={button.buttonType}
+        style={{
+          textAlign: "left",
+          borderRadius: 0,
+        }}
+        onClick={this.handleToggle}
       />
     );
 
@@ -119,6 +128,9 @@ class ButtonSelect extends Component {
               "btn": false,
               "button-toggle": true,
             }}
+            style={{
+              borderRadius: 0,
+            }}
             onClick={this.handleToggle}
           >
             <i className={toggleIcon} aria-hidden="true"/>
@@ -126,13 +138,19 @@ class ButtonSelect extends Component {
         </div>
         <div className={toggleClassNames}>
           {nonActiveButtons.map((button, key) => (
-            <button
-              className="btn button-item" key={key}
+            <Button
+              key={key}
+              className="btn button-item"
               type="button"
               onClick={() => this.handleButtonChange(button)}
+              style={{
+                paddingTop: 0,
+                borderRadius: 0,
+                textAlign: "left",
+              }}
             >
               <Translation defaultValue={button.name} i18nKey={button.i18nKeyLabel} />
-            </button>))}
+            </Button>))}
         </div>
       </div>
     );
