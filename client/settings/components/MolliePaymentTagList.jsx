@@ -103,7 +103,7 @@ class MolliePaymentTagList extends Component {
     if (_.isEmpty(this.tags)) {
       return (
         <div className="alert alert-info">
-          <Translation i18nKey="mollie.settings.noPaymentMethodsFound"/>
+          <Translation i18nKey="admin.paymentSettings.noPaymentMethodsFound"/>
         </div>
       )
     }
