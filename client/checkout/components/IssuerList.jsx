@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { Translation } from "/imports/plugins/core/ui/client/components";
 
-import ButtonSelect from "./ButtonSelect";
+import BankSelect from "./BankSelect";
 
 export default class IssuerList extends Component {
   static propTypes = {
@@ -75,7 +75,7 @@ export default class IssuerList extends Component {
           />
         </strong>
         {banks.length ?
-        <ButtonSelect
+        <BankSelect
           buttons={bankButtons}
           onChange={this.handleBankChange}
         /> : null}

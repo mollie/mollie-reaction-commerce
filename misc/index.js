@@ -1,10 +1,13 @@
 import _ from "lodash";
+import { CartaSiIcon, CartesBancairesIcon } from "./images";
 
 export const supportedCurrencies = {
   banktransfer: ["eur"],
   belfius: ["eur"],
   bitcoin: ["eur"],
   creditcard: ["aud", "bgn", "cad", "chf", "czk", "dkk", "eur", "gbp", "hkd", "hrk", "huf", "ils", "isk", "jpy", "pln", "ron", "sek", "usd"],
+  cartesbancaires: ["eur"],
+  cartasi: ["eur"],
   directdebit: ["eur"],
   eps: ["eur"],
   giftcard: ["eur"],
@@ -54,4 +57,19 @@ export const getMollieLocale = (langIso) => {
   return _.get(mollieLocales, `${langIso}[0]`, "en_US");
 };
 
-export default supportedCurrencies;
+export const getPaymentIcon = (method) => {
+  let imageSrc;
+  switch (method) {
+    case "cartasi":
+      imageSrc = CartaSiIcon;
+      break;
+    case "cartesbancaires":
+      imageSrc = CartesBancairesIcon;
+      break;
+    default:
+      imageSrc = imageSrc = `https://www.mollie.com/images/payscreen/methods/${method}.png`;
+      break;
+  }
+
+  return imageSrc;
+};

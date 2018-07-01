@@ -10,6 +10,8 @@ import { Button, Handle } from "/imports/plugins/core/ui/client/components";
 import { SortableItem } from "/imports/plugins/core/ui/client/containers";
 import { Router } from "/imports/plugins/core/router/lib";
 
+import { getPaymentIcon } from "../../../misc";
+
 class MolliePaymentTagItem extends Component {
   static propTypes = {
     blank: PropTypes.bool, // eslint-disable-line react/boolean-prop-naming
@@ -159,7 +161,7 @@ class MolliePaymentTagItem extends Component {
             <Handle connectDragSource={this.props.connectDragSource} style={{ cursor: "move" }} />
             <div className="rui btn" style={{ padding: "4px 12px", cursor: "default" }}>
               <img
-                src={`https://www.mollie.com/images/payscreen/methods/${tag._id}.png`}
+                src={getPaymentIcon(tag._id)}
                 width="40"
                 height="40"
                 style={{ width: "20px", height: "20px" }}

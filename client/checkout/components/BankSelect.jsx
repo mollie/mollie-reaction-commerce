@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { Button, Translation } from "/imports/plugins/core/ui/client/components";
 
-class ButtonSelect extends Component {
+class BankSelect extends Component {
   static propTypes = {
     buttons: PropTypes.array,
     currentButton: PropTypes.node,
@@ -157,4 +157,4 @@ class ButtonSelect extends Component {
   }
 }
 
-export default ButtonSelect;
+export default BankSelect;

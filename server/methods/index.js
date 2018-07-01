@@ -19,6 +19,15 @@ import { getMollieLocale } from "../../misc";
  * @namespace Payment/Mollie/Methods
  */
 Meteor.methods({
+  /**
+   * Save Mollie settings
+   * @method
+   * @memberof Payment/Mollie/Methods
+   * @param {String} id          The ID we need to pass to Meteor
+   * @param {String} settingsKey The settings key
+   * @param {Array}  fields      The fields to save
+   * @return {Object} result
+   */
   "mollie/settings/save"(id, settingsKey, fields) {
     // Check all arguments
     check(id, String);
@@ -42,16 +51,51 @@ Meteor.methods({
         try {
           const mollie = Mollie({ apiKey });
           if (typeof mollie === "undefined") {
-            // Likely not a valid key, but we still need to update the settings
+            // Likely not a valid API key, but we still need to update the settings
             Meteor.call("registry/update", id, settingsKey, fields);
             return true;
           }
 
           // Retrieve all local payment methods settings and availability; merge with Mollie's
           const methods = Promise.await(mollie.methods.all());
-          _.remove(field.value, item => !_.includes(_.map(methods, "id"), item._id));
+
+          // Remove methods that are no longer available in the Mollie account
+          _.remove(field.value, (item) => {
+            if (_.includes(["cartasi", "cartesbancaires"], item._id)) {
+              return _.findIndex(methods, ["id", "creditcard"]) < 0; // Remove these methods when credit cards have been disabled
+            }
+
+            return _.findIndex(methods, ["id", item._id]) < 0;
+          });
+
+          // Inject CartaSi and Cartes Bancaires when credit cards are enabled in the Mollie account
+          const ccIndex = _.findIndex(methods, ["id", "creditcard"]);
+          if (ccIndex > -1) {
+            _.forEach(
+              [
+                { id: "cartasi", description: "CartaSi", enabled: false },
+                { id: "cartesbancaires", description: "Cartes Bancaires", enabled: false },
+              ],
+              (method) => {
+                if (_.findIndex(field.value, ["_id", method.id]) < 0) {
+                  methods.splice(ccIndex, 0, method);
+                }
+              }
+            );
+          }
+
+          // Check if the additional credit card methods might have to be disabled
+          ["cartasi", "cartesbancaires"].map((name) => {
+            if (!_.get(_.find(field.value, ["_id", "creditcard"]), "enabled", false)) {
+              const method = _.find(field.value, ["_id", name]);
+              if (typeof method === "object") {
+                method.enabled = false;
+              }
+            }
+          });
+
           _.forEach(methods, method => {
-            if (!_.includes(_.map(field.value, "_id"), method.id)) {
+            if (_.findIndex(field.value, ["_id", method.id]) < 0) {
               field.value.push({
                 _id: method.id,
                 name: method.description,
@@ -75,11 +119,24 @@ Meteor.methods({
     }
   },
 
+  /**
+   * Create a payment
+   * @method
+   * @memberof Payment/Mollie/Methods
+   * @param {String}      method Method id
+   * @param {String|null} issuer The issuer id
+   * @param {String|null} locale The Reaction locale to use
+   * @return {Object} result
+   */
   "mollie/payment/create"(method, issuer = null, locale = null) {
     // Check all arguments
     check(method, String);
     check(issuer, Match.Maybe(String));
     check(locale, Match.Maybe(String));
+
+    if (_.includes(["cartasi", "cartesbancaires"], method)) {
+      method = "creditcard";
+    }
 
     try {
       // Grab the module configuration

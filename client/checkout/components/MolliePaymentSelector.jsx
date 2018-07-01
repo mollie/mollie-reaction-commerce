@@ -8,7 +8,7 @@ import { Reaction } from "/client/api";
 import { Packages } from "/lib/collections";
 
 import IssuerListModal from "./IssuerListModal";
-import { getSupportedMethods } from "../../../misc";
+import { getPaymentIcon, getSupportedMethods } from "../../../misc";
 import { ISSUER_LIST_MODAL, ISSUER_LIST_PAGE, NAME } from "../../../misc/consts";
 import { MollieApiMethod } from "../../../lib/api/src/models";
 
@@ -107,7 +107,7 @@ class MolliePaymentSelector extends Component {
             onClick={() => this.handleClick(method)}
           >
             <div style={{ textAlign: "left", marginRight: "20px", overflow: "hidden", textOverflow: "ellipsis" }}>
-              <img src={`https://www.mollie.com/images/payscreen/methods/${method._id}.png`} style={{ display: "inline" }}/>
+              <img src={getPaymentIcon(method._id)} style={{ display: "inline", height: "40px", width: "40px" }}/>
               <strong style={{ display: "inline" }}>
                 &nbsp;{method.name}
               </strong>
