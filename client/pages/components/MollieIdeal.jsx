@@ -72,8 +72,15 @@ export default class MollieIdeal extends Component {
 
     return (
       <div className="panel" style={{ maxWidth: "430px", margin: "10px auto" }}>
+        <div className="panel-heading" style={{ padding: "10px 10px 0px 10px" }}>
+          <img
+            src="https://www.mollie.com/images/payscreen/methods/ideal.png"
+            alt={name}
+            style={{ width: "40px", height: "40px", display: "inline" }}
+          />&nbsp;
+          <h4 className="modal-title" style={{ display: "inline" }}>{name}</h4>
+        </div>
         <div className="panel-body" style={{ backgroundColor: "inherit" }}>
-          <h4>{name}</h4>
 
           <div style={{ backgroundColor: "inherit" }}>
             <IssuerList
