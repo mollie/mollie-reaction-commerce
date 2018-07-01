@@ -83,7 +83,7 @@ class IssuerListModal extends Component {
                   <h4 className="modal-title">{name}</h4>
                 </div>
 
-                <div className="modal-body">
+                <div className="modal-body" style={{ backgroundColor: "#fff" }}>
                   <IssuerList
                     submit={submit}
                     qrCode={qrCode && width >= 768}
