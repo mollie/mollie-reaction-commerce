@@ -30,7 +30,7 @@ export default class MollieIdeal extends Component {
   componentDidMount() {
     const self = this;
     // Keep an eye on the window width, too small and the QR code should be hidden
-    window.addEventListener('resize', _.throttle(() => {
+    window.addEventListener("resize", _.throttle(() => {
       self.setState({ width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth });
     }, 200));
     try {
@@ -42,7 +42,7 @@ export default class MollieIdeal extends Component {
         });
       }
       this.setState({
-        name: _.get(_.find(_.get(packageData, `settings.${NAME}.methods`), item => item._id === 'ideal'), 'name', 'iDEAL'),
+        name: _.get(_.find(_.get(packageData, `settings.${NAME}.methods`), item => item._id === "ideal"), "name", "iDEAL"),
       });
     } catch (e) {
     }

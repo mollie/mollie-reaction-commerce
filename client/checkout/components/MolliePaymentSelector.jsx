@@ -16,7 +16,7 @@ let packageData;
 
 class MolliePaymentSelector extends Component {
   state = {
-    methods: _.get(this.props, 'methods', []),
+    methods: _.get(this.props, "methods", []),
     issuerListVisible: false,
   };
 

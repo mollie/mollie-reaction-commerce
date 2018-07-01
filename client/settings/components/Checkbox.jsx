@@ -5,7 +5,7 @@ import { Components } from "../../../../../core/components/lib";
 class Checkbox extends Component {
   // Create a semi-random ID
   //
-  // ID's are required for form controls and their labels for ARIA compliance.
+  // IDs are required for form controls and their labels for ARIA compliance.
   // This will be the default ID for this component unless once is passed in through props.
   _id = `checkbox-${Math.floor(Math.random() * 100000)}`;
 
@@ -45,10 +45,10 @@ class Checkbox extends Component {
           defaultValue={this.props.label}
           i18nKey={this.props.i18nKeyLabel}
           style={{
-            display: 'inline-block',
-            verticalAlign: 'top',
-            marginTop: '5px',
-            marginLeft: '5px',
+            display: "inline-block",
+            verticalAlign: "top",
+            marginTop: "5px",
+            marginLeft: "5px",
           }}
         />
       </label>

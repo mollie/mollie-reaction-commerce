@@ -53,7 +53,7 @@ const composer = (props, onData) => {
         MollieApiPayment.STATUS_CANCELED,
         MollieApiPayment.STATUS_EXPIRED,
         MollieApiPayment.STATUS_FAILED,
-      ], _.get(molliePayment, 'bankStatus'))) {
+      ], _.get(molliePayment, "bankStatus"))) {
         // Back to the checkout
         if (!(MollieApiPayment.STATUS_OPEN && molliePayment.method === MollieApiMethod.BANKTRANSFER)) {
           return Reaction.Router.go("cart/checkout", {}, {});

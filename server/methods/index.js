@@ -158,7 +158,7 @@ Meteor.methods({
 
       const value = cart.getTotal();
 
-      let description = _.get(packageData, `settings.${NAME}.description`, 'Cart %');
+      let description = _.get(packageData, `settings.${NAME}.description`, "Cart %");
       description = description.replace(/%/, cart._id);
       description = description.replace(/{cart\.id}/, cart._id);
       description = description.replace(/{customer\.name}/, _.get(cart, "shipping[0].address.fullName", ""));

@@ -32,8 +32,8 @@ const compose = (props, onData) => {
     if (err) {
       return onData(err);
     } else {
-      banks = _.get(result, 'issuers', []);
-      selectedBank = _.get(_.head(banks), 'id', '');
+      banks = _.get(result, "issuers", []);
+      selectedBank = _.get(_.head(banks), "id", "");
 
       return onData(null, { banks, selectedBank });
     }

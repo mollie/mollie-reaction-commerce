@@ -39,7 +39,7 @@ class IssuerListModal extends Component {
   componentDidMount() {
     const self = this;
     // Keep an eye on the window width, too small and the QR code should be hidden
-    window.addEventListener('resize', _.throttle(() => {
+    window.addEventListener("resize", _.throttle(() => {
       self.setState({ width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth });
     }, 200));
     try {
@@ -49,7 +49,7 @@ class IssuerListModal extends Component {
         shopId: Reaction.getShopId(),
       });
       this.setState({
-        name: _.get(_.find(_.get(packageData, `settings.${NAME}.methods`), item => item._id === 'ideal'), 'name', 'iDEAL'),
+        name: _.get(_.find(_.get(packageData, `settings.${NAME}.methods`), item => item._id === "ideal"), "name", "iDEAL"),
       });
     } catch (e) {
     }
@@ -77,7 +77,7 @@ class IssuerListModal extends Component {
         <div>
           <div className="modal-backdrop fade in" id={`modal-backdrop-${uniqueId}`}/>
           <div className="modal fade in" id={`modal-${uniqueId}`} style={{ display: "block" }}>
-            <div className="modal-dialog" style={{ maxWidth: '430px', margin: "10px auto" }}>
+            <div className="modal-dialog" style={{ maxWidth: "430px", margin: "10px auto" }}>
               <form className="modal-content" onSubmit={this.handleSubmit}>
                 <div className="modal-header">
                   <h4 className="modal-title">{name}</h4>
