@@ -10,6 +10,6 @@ if (Meteor.isServer) {
   Meteor.startup(function() {
     const rawCollection = MollieQrCodes.rawCollection();
     const ensureIndex = Meteor.wrapAsync(rawCollection.ensureIndex, rawCollection);
-    ensureIndex({ expiredAt: 1 }, { expireAfterSeconds: 0 });
+    ensureIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
   });
 }

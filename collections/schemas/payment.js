@@ -13,7 +13,7 @@ import { createdAtAutoValue, updatedAtAutoValue } from "/imports/collections/sch
 export const MolliePaymentsSchema = new SimpleSchema({
   transactionId: {
     type: String,
-    label: "Transaction ID"
+    label: "Transaction ID",
   },
   userId: {
     type: String,
@@ -26,11 +26,11 @@ export const MolliePaymentsSchema = new SimpleSchema({
   currency: {
     type: String,
     max: 3,
-    label: "Currency"
+    label: "Currency",
   },
   cartId: {
     type: String,
-    label: "Cart ID"
+    label: "Cart ID",
   },
   orderId: {
     type: String,
@@ -39,11 +39,11 @@ export const MolliePaymentsSchema = new SimpleSchema({
   },
   method: {
     type: String,
-    label: "Payment Method"
+    label: "Payment Method",
   },
   bankStatus: {
     type: String,
-    label: "Bank Status"
+    label: "Bank Status",
   },
   createdAt: {
     type: Date,

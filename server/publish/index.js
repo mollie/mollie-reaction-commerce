@@ -4,7 +4,7 @@ import { Packages, Cart } from "/lib/collections";
 
 import { NAME } from "../../misc/consts";
 import { check, Match } from "meteor/check";
-import { MolliePayments } from "../../collections";
+import { MolliePayments, MollieQrCodes } from "../../collections";
 
 Meteor.publish("mollie/methods/list", (shopId) => {
   check(shopId, Match.Maybe(String));
@@ -36,3 +36,14 @@ Meteor.publish("MolliePayments", () => {
     },
   });
 });
+
+Meteor.publish("MollieQrCodes", () => {
+  return MollieQrCodes.find({
+    userId: Meteor.userId(),
+  }, {
+    fields: {
+      transactionId: 0,
+    },
+  });
+});
+

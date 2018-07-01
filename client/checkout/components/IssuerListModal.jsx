@@ -80,7 +80,12 @@ class IssuerListModal extends Component {
             <div className="modal-dialog" style={{ maxWidth: "430px", margin: "10px auto" }}>
               <form className="modal-content" onSubmit={this.handleSubmit}>
                 <div className="modal-header">
-                  <h4 className="modal-title">{name}</h4>
+                  <img
+                    src="https://www.mollie.com/images/payscreen/methods/ideal.png"
+                    alt={name}
+                    style={{ width: "40px", height: "40px", display: "inline" }}
+                  />&nbsp;
+                  <h4 className="modal-title" style={{ display: "inline" }}>{name}</h4>
                 </div>
 
                 <div className="modal-body" style={{ backgroundColor: "#fff" }}>

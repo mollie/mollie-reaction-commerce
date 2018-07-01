@@ -67,6 +67,10 @@ const composer = (props, onData) => {
         limit: 1,
       })
         .observe({
+          addedAt(order) {
+            // Order found. Continue to the order confirmation page.
+            Reaction.Router.go("cart/completed", {}, { _id: order.cartId });
+          },
           changedAt(order) {
             // Order found. Continue to the order confirmation page.
             Reaction.Router.go("cart/completed", {}, { _id: order.cartId });

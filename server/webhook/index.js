@@ -7,9 +7,9 @@ import { Reaction, Logger } from "/server/api";
 import { Packages, Cart, Orders } from "/lib/collections";
 
 import Mollie from "../../lib/api/src/mollie";
-import { MolliePayments } from "../../collections";
+import { MolliePayments, MollieQrCodes } from "../../collections";
 import { NAME } from "../../misc/consts";
-import { MollieApiMethod } from "../../lib/api/src/models";
+import { MollieApiMethod, MollieApiPayment } from "../../lib/api/src/models";
 
 const DDPCommon = Package["ddp-common"].DDPCommon;
 
@@ -63,6 +63,11 @@ const processWebhook = (req, res) => {
           bankStatus: molliePayment.status,
         },
       });
+      if (!_.includes([MollieApiPayment.STATUS_OPEN, MollieApiPayment.STATUS_PENDING])) {
+        MollieQrCodes.remove({
+          transactionId: molliePayment.id,
+        });
+      }
 
       Logger.debug(molliePayment);
 

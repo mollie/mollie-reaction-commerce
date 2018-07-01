@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Translation } from "/imports/plugins/core/ui/client/components";
 
 import BankSelect from "./BankSelect";
+import IdealQrImage from "../containers/IdealQrImageContainer";
 
 export default class IssuerList extends Component {
   static propTypes = {
@@ -26,7 +27,7 @@ export default class IssuerList extends Component {
   componentDidUpdate() {
     if (this.props.submit) {
       const { selectedBank } = this.state;
-      Meteor.call("mollie/payment/create", "ideal", selectedBank, Meteor.user().profile.lang, (error, result) => {
+      Meteor.call("mollie/payment/create", "ideal", selectedBank, (error, result) => {
         if (error || typeof result !== "string") {
           // When an error occurs the message will be embedded in the payment methods box on the checkout page
           Alerts.alert("An error occurred while initializing the payment. Please contact our customer service.", "error", {
@@ -101,14 +102,7 @@ export default class IssuerList extends Component {
             </div>
             <br />
             <strong><Translation i18nKey="checkout.issuers.scanTheQrCode"/></strong>
-            <img
-              src="https://qr2.ideal.nl/ideal-qr/qr/get/b3ada671-6534-44de-a823-5df34c494ac0"
-              alt="iDEAL QR code"
-              style={{
-                width: "400px",
-                height: "400px",
-              }}
-            />
+            <IdealQrImage/>
           </div> : null }
       </div>
     );

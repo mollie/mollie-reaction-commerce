@@ -13,22 +13,19 @@ import { createdAtAutoValue, updatedAtAutoValue } from "/imports/collections/sch
 export const MollieQrCodesSchema = new SimpleSchema({
   transactionId: {
     type: String,
-    label: "Transaction ID"
+    label: "Transaction ID",
   },
   userId: {
     type: String,
     label: "User ID",
-    autoValue: function() {
-      return this.userId;
-    },
   },
   cartId: {
     type: String,
-    label: "Cart ID"
+    label: "Cart ID",
   },
   amount: {
     type: Number,
-    label: "Amount"
+    label: "Amount",
   },
   method: {
     type: String,
@@ -43,7 +40,7 @@ export const MollieQrCodesSchema = new SimpleSchema({
   },
   createdAt: {
     type: Date,
-    autoValue: createdAtAutoValue
+    autoValue: createdAtAutoValue,
   },
   updatedAt: {
     type: Date,

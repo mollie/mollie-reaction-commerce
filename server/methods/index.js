@@ -8,7 +8,7 @@ import _ from "lodash";
 import { Reaction, Logger } from "/server/api";
 import { Cart, Packages, Shops, Accounts } from "/lib/collections";
 
-import { MolliePayments } from "../../collections";
+import { MolliePayments, MollieQrCodes } from "../../collections";
 import { NAME } from "../../misc/consts";
 import Mollie from "../../lib/api/src/mollie";
 import { MollieApiMethod } from "../../lib/api/src/models";
@@ -128,11 +128,12 @@ Meteor.methods({
    * @param {String|null} locale The Reaction locale to use
    * @return {Object} result
    */
-  "mollie/payment/create"(method, issuer = null, locale = null) {
+  "mollie/payment/create"(method, issuer = null) {
     // Check all arguments
     check(method, String);
     check(issuer, Match.Maybe(String));
-    check(locale, Match.Maybe(String));
+
+    const locale = Meteor.user().profile.lang;
 
     if (_.includes(["cartasi", "cartesbancaires"], method)) {
       method = "creditcard";
@@ -374,6 +375,118 @@ Meteor.methods({
 
       Logger.error(`Mollie Error: ${JSON.stringify(util.inspect(e))}`);
       throw new Meteor.Error("server-error", "An unexpected error occurred while processing Mollie refunds");
+    }
+  },
+
+  /**
+   * Refresh the iDEAL QR Code
+   * @method
+   * @memberof Payment/Mollie/Methods
+   * @return {Boolean} result
+   */
+  "mollie/idealqr/refresh"(cartId) {
+    check(cartId, String);
+
+    const locale = Meteor.user().profile.lang;
+
+    const code = MollieQrCodes.findOne({
+      cartId,
+    });
+    const cart = Cart.findOne({
+      userId: Meteor.userId,
+      _id: cartId,
+    });
+    if (!code) {
+      const packageData = Packages.findOne({
+        name: NAME,
+        shopId: Reaction.getShopId(),
+      });
+
+      try {
+        const mollie = Mollie({ apiKey: _.get(packageData, `settings.${NAME}.apiKey`) });
+
+        const currency = Shops.findOne().currency;
+        const account = Accounts.findOne({
+          userId: cart.userId,
+        });
+
+        const value = cart.getTotal();
+
+        let description = _.get(packageData, `settings.${NAME}.description`, "Cart %");
+        description = description.replace(/%/, cart._id);
+        description = description.replace(/{cart\.id}/, cart._id);
+        description = description.replace(/{customer\.name}/, _.get(cart, "shipping[0].address.fullName", ""));
+
+        // Grab the payment info
+        const paymentInfo = {
+          amount: {
+            value: parseFloat(_.toString(value)).toFixed(2),
+            currency,
+          },
+          description,
+          redirectUrl: `${Meteor.absoluteUrl()}mollie/return?cartId=${cart._id}`, // By the time the visitor returns, the cart ID has changed, adding it to the query for cart recovery
+          webhookUrl: `${Meteor.absoluteUrl()}mollie/webhook?cartId=${cart._id}`, // We're unable to access the webhook's content since Reaction only exposes JSON functionality
+          billingEmail: _.get(account, "email[0].address"),
+          shippingAddress: {
+            streetAndNumber:
+              _.trim(_.get(cart, "shipping[0].address.address1", "")
+                + " "
+                + _.get(cart, "shipping[0].address.address2", "")),
+            city: _.get(cart, "shipping[0].address.city"),
+            region: _.get(cart, "shipping[0].address.region"),
+            postalCode: _.get(cart, "shipping[0].address.postal"),
+            country: _.get(cart, "shipping[0].address.country"),
+          },
+          billingAddress: {
+            streetAndNumber:
+              _.trim(_.get(cart, "billing[0].address.address1", "")
+                + " "
+                + _.get(cart, "billing[0].address.address2", "")),
+            city: _.get(cart, "billing[0].address.city", ""),
+            region: _.get(cart, "billing[0].address.region"),
+            postalCode: _.get(cart, "billing[0].address.postal"),
+            country: _.get(cart, "billing[0].address.country"),
+          },
+        };
+        paymentInfo.method = "ideal";
+        // Share the shop locale when enabled
+        if (locale && _.get(packageData, `settings.${NAME}.shopLocale`)) {
+          paymentInfo.locale = getMollieLocale(locale);
+        }
+        paymentInfo.include = "details.qrCode";
+
+        Logger.debug(`Mollie Payment: ${JSON.stringify(paymentInfo)}`);
+
+        // Initialize mollie and create the payment
+        const payment = Promise.await(mollie.payments.create(paymentInfo));
+        MolliePayments.insert({
+          transactionId: payment.id,
+          userId: this.userId,
+          cartId: cart._id,
+          method: payment.method,
+          bankStatus: payment.status,
+          amount: payment.amount.value,
+          currency: payment.amount.currency || Shops.findOne().currency,
+        });
+        MollieQrCodes.insert({
+          transactionId: payment.id,
+          userId: this.userId,
+          cartId: cart._id,
+          method: payment.method,
+          amount: payment.amount.value,
+          expiresAt: payment.expiresAt,
+          imageUrl: payment.details.qrCode.src,
+        });
+
+        return true;
+      } catch (e) {
+        if (e.title && e.detail) {
+          throw new Meteor.Error(e.title, e.detail);
+        }
+
+        Logger.error(JSON.stringify(util.inspect(e)));
+        throw new Meteor.Error("server-error", "An unexpected error occurred while creating a Mollie payment");
+      }
     }
   }
 });
