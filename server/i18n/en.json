@@ -3,21 +3,13 @@
   "i18n": "en",
   "ns": "mollie",
   "translation": {
-    "mollie": {
-      "settings": {
-        "apiKeyMissing": "API Key is Missing",
-        "noPaymentMethodsFound": "No payment methods found. Make sure the API key is correct and that you have enabled at least one payment method.",
-        "paymentMethods": "Payment Methods",
-        "sendLocalePaymentScreen": "Send locale for payment screen",
-        "doNotSendLocale": "Do not send locale - use browser language",
-        "sendLocale": "Send locale for payment screen",
-        "enableIdealQr": "Enable iDEAL QR codes",
-        "description": "Description",
-        "enterADescriptionHere": "Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters. You can use the following variables: {cart.id} {customer.name}",
-        "issuerList": "Issuer list",
-        "onClick": "On click",
-        "ownPage": "Own page",
-        "paymentScreen": "Payment screen"
+    "reaction-payments": {
+      "checkout": {
+        "issuers": {
+          "selectABank": "Select a Bank",
+          "or": "or",
+          "scanTheQrCode": "Scan the QR Code"
+        }
       },
       "payment": {
         "paymentInitError": "An error occurred while initializing the payment. Please contact our customer service."
@@ -25,11 +17,24 @@
       "return": {
         "welcomeBack": "Welcome back!",
         "notReceivedPaymentStatus": "We have not yet received a definite payment status. You will be notified once your payment has been accepted."
-      }
-    },
-    "admin": {
-      "paymentSettings": {
-        "mollieLabel": "Mollie"
+      },
+      "admin": {
+        "paymentSettings": {
+          "mollieLabel": "Mollie",
+          "apiKeyMissing": "API Key is Missing",
+          "noPaymentMethodsFound": "No payment methods found. Make sure the API key is correct and that you have enabled at least one payment method.",
+          "paymentMethods": "Payment Methods",
+          "shopLocalePaymentScreen": "Send locale for payment screen",
+          "doNotSendLocale": "Do not send locale - use browser language",
+          "sendLocale": "Send locale for payment screen",
+          "enableIdealQr": "Enable iDEAL QR codes",
+          "description": "Description",
+          "enterADescriptionHere": "Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters. You can use the following variables: {cart.id} {customer.name}",
+          "issuerList": "Issuer list",
+          "onClick": "On click",
+          "ownPage": "Own page",
+          "paymentScreen": "Payment screen"
+        }
       }
     }
   }

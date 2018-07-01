@@ -31,7 +31,7 @@ export default class IssuerList extends Component {
           // When an error occurs the message will be embedded in the payment methods box on the checkout page
           Alerts.alert("An error occurred while initializing the payment. Please contact our customer service.", "error", {
             placement: "paymentMethod",
-            i18nKey: "mollie.payment.paymentInitError",
+            i18nKey: "reaction-payments.payment.paymentInitError",
             autoHide: 10000,
           });
         } else {
@@ -70,7 +70,7 @@ export default class IssuerList extends Component {
       <div style={{ backgroundColor: "inherit" }}>
         <strong>
           <Translation
-            i18nKey="mollie.issuers.selectABank"
+            i18nKey="checkout.issuers.selectABank"
             style={{ marginBottom: "12px", display: "block" }}
           />
         </strong>
@@ -96,11 +96,11 @@ export default class IssuerList extends Component {
                 backgroundColor: "inherit",
                 padding: "0 10px",
               }}>
-              <Translation i18nKey="mollie.issuers.or"/>
+              <Translation i18nKey="checkout.issuers.or"/>
             </span>
             </div>
             <br />
-            <strong><Translation i18nKey="mollie.issuers.scanTheQrCode"/></strong>
+            <strong><Translation i18nKey="checkout.issuers.scanTheQrCode"/></strong>
             <img
               src="https://qr2.ideal.nl/ideal-qr/qr/get/b3ada671-6534-44de-a823-5df34c494ac0"
               alt="iDEAL QR code"

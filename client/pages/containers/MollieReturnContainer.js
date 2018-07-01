@@ -16,9 +16,9 @@ class MollieReturnContainer extends Component {
       <div className="completed-order-container">
         <div className="container order-completed">
           <div className="order-details-header">
-            <h3><Translation i18nKey="mollie.return.welcomeBack"/></h3>
+            <h3><Translation i18nKey="return.welcomeBack"/></h3>
             <p>
-              <Translation i18nKey="mollie.return.notReceivedPaymentStatus"/>
+              <Translation i18nKey="return.notReceivedPaymentStatus"/>
             </p>
           </div>
         </div>

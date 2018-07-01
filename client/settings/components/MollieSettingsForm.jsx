@@ -77,14 +77,14 @@ class MollieSettingsForm extends Component {
     const { settings: { apiKey, methods, shopLocale, idealQr, issuerList, description } } = this.props;
 
     const shopLocaleOptions = [
-        { value: false, label: i18next.t("mollie.settings.doNotSendLocale") },
-        { value: true, label: i18next.t("mollie.settings.sendLocale") },
+        { value: false, label: i18next.t("admin.paymentSettings.doNotSendLocale") },
+        { value: true, label: i18next.t("admin.paymentSettings.sendLocale") },
     ];
 
     const issuerListOptions = [
-      { value: ISSUER_LIST_MODAL, label: i18next.t("mollie.settings.onClick") },
-      { value: ISSUER_LIST_PAGE, label: i18next.t("mollie.settings.ownPage") },
-      { value: ISSUER_LIST_MOLLIE, label: i18next.t("mollie.settings.paymentScreen") },
+      { value: ISSUER_LIST_MODAL, label: i18next.t("admin.paymentSettings.onClick") },
+      { value: ISSUER_LIST_PAGE, label: i18next.t("admin.paymentSettings.ownPage") },
+      { value: ISSUER_LIST_MOLLIE, label: i18next.t("admin.paymentSettings.paymentScreen") },
     ];
 
     return (
@@ -92,7 +92,7 @@ class MollieSettingsForm extends Component {
         <form onSubmit={this.handleSubmit}>
           <TextField
             label="API Key"
-            i18nKeyLabel="mollie.settings.apiKey"
+            i18nKeyLabel="settings.apiKey"
             name="apiKey"
             type="text"
             onChange={this.onApiKeyChange}
@@ -100,7 +100,8 @@ class MollieSettingsForm extends Component {
           />
 
           <MolliePaymentTagList
-            label={i18next.t("mollie.settings.paymentMethods")}
+            data-i18n="settings.paymentMethods"
+            label={i18next.t("admin.paymentSettings.paymentMethods")}
             onChange={this.onMethodsChange}
             methods={methods}
           />
@@ -109,7 +110,7 @@ class MollieSettingsForm extends Component {
             <Checkbox
               className="checkbox-switch"
               label="Enable iDEAL QR codes"
-              i18nKeyLabel="mollie.settings.enableIdealQr"
+              i18nKeyLabel="admin.paymentSettings.enableIdealQr"
               checked={idealQr}
               onChange={this.onIdealQrChange}
             />
@@ -117,7 +118,7 @@ class MollieSettingsForm extends Component {
 
           <div className="rui multiselect form-group">
             <label>
-              <Translation i18nKey="mollie.settings.shopLocalePaymentScreen"/>
+              <Translation i18nKey="admin.paymentSettings.shopLocalePaymentScreen"/>
             </label>
             <Select
               searchable={false}
@@ -129,7 +130,7 @@ class MollieSettingsForm extends Component {
 
           <div className="rui multiselect form-group">
             <label>
-              <Translation i18nKey="mollie.settings.issuerList"/>
+              <Translation i18nKey="admin.paymentSettings.issuerList"/>
             </label>
             <Select
               searchable={false}
@@ -141,13 +142,13 @@ class MollieSettingsForm extends Component {
 
           <TextField
             label="Description"
-            i18nKeyLabel="mollie.settings.description"
+            i18nKeyLabel="admin.paymentSettings.description"
             name="cartDescription"
             type="text"
             onChange={this.onDescriptionChange}
             value={description}
             helpText="Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters."
-            i18nKeyHelpText="mollie.settings.enterADescriptionHere"
+            i18nKeyHelpText="admin.paymentSettings.enterADescriptionHere"
           />
 
           <button className="btn btn-primary pull-right" type="submit">
