@@ -23,7 +23,18 @@ class Checkbox extends Component {
   renderLabel() {
     const { label, i18nKeyLabel } = this.props;
     if (label || i18nKeyLabel) {
-      return (<Components.Translation defaultValue={this.props.label} i18nKey={this.props.i18nKeyLabel} />);
+      return (
+        <Components.Translation
+          defaultValue={this.props.label}
+          i18nKey={this.props.i18nKeyLabel}
+          style={{
+            display: "inline-block",
+            verticalAlign: "top",
+            marginTop: "5px",
+            marginLeft: "5px",
+          }}
+        />
+      );
     }
     return null;
   }
@@ -41,16 +52,7 @@ class Checkbox extends Component {
           onBlur={this.props.onMouseOut}
           onMouseOut={this.props.onMouseOut}
         />
-        <Components.Translation
-          defaultValue={this.props.label}
-          i18nKey={this.props.i18nKeyLabel}
-          style={{
-            display: "inline-block",
-            verticalAlign: "top",
-            marginTop: "5px",
-            marginLeft: "5px",
-          }}
-        />
+        {this.renderLabel()}
       </label>
     );
   }
