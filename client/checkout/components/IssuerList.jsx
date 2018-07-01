@@ -71,7 +71,7 @@ export default class IssuerList extends Component {
         <strong>
           <Translation
             i18nKey="mollie.issuers.selectABank"
-            style={{ marginBottom: "6px", display: "block" }}
+            style={{ marginBottom: "12px", display: "block" }}
           />
         </strong>
         {banks.length ?
