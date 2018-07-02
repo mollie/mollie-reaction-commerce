@@ -118,7 +118,7 @@ Mollie stuurt een bericht aan je website wanneer de status van de betaling veran
 
 # Wil je meewerken aan deze module? #
 
-Wil je helpen om onze plugin voor Reaction Commerce nog beter te maken? Wij staan open voor [pull requests](https://github.com/mollie/Reaction Commerce/pulls?utf8=%E2%9C%93&q=is%3Apr) voor onze module. 
+Wil je helpen om onze plugin voor Reaction Commerce nog beter te maken? Wij staan open voor [pull requests](https://github.com/mollie/reaction/pulls?utf8=%E2%9C%93&q=is%3Apr) voor onze module. 
 
 Maar wat denk je er over om bij een [technology driven organisatie](https://jobs.mollie.com/) aan de slag te gaan? Mollie is altijd op zoek naar developers en system engineers. [Check onze vacatures](https://jobs.mollie.com/) of [neem contact met ons op](mailto:personeel@mollie.com).
 
