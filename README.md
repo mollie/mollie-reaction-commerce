@@ -129,7 +129,7 @@ It is possible that Mollie could not reach your website or that your website cou
 
 # Would you like to help improve this module? #
 
-Would you like to help make this module for Reaction Commerce even better? We are always open to [pull requests](https://github.com/mollie/Reaction Commerce/pulls?utf8=%E2%9C%93&q=is%3Apr).
+Would you like to help make this module for Reaction Commerce even better? We are always open to [pull requests](https://github.com/mollie/reaction/pulls?utf8=%E2%9C%93&q=is%3Apr).
 
 And how about working at a [technology driven organization](https://jobs.mollie.com/)? Mollie is always looking for developers and system engineers. [Check our vacancies](https://jobs.mollie.com/) or [contact us](mailto:personeel@mollie.com).
 
