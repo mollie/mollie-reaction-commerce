@@ -30,9 +30,9 @@ If you have no experience with this, then leave the installation of this module 
 
 ## Installation Reaction Commerce ##
 
-* Clone this repository into the folder `/imports/plugins/custom/mollie-reaction`:
+* Install this module into the folder `/imports/plugins/custom/mollie-reaction` from the root directory:
   ```shell
-  $ git clone https://github.com/mollie/reaction -b v1.0.0 imports/plugins/custom/mollie-reaction
+  $ npm install --prefix ./imports/plugins/custom/mollie-reaction @mollie/reaction
   ```
 * Go to the dashboard of your Reaction Commerce webshop
 * Scroll to the Payments tab

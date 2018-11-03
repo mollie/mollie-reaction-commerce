@@ -28,11 +28,11 @@ Download en installeer de Mollie betaalmodule voor Reaction Commerce om direct o
 
 ## Installatie Reaction Commerce ##
 
-* Clone deze repository in de map `/imports/plugins/custom/mollie-reaction`:
+* Installeer de module in de map `/imports/plugins/custom/mollie-reaction` vanuit de hoofdmap:
   ```shell
-  $ git clone https://github.com/mollie/reaction -b v1.0.0 imports/plugins/custom/mollie-reaction
+  $ npm install --prefix ./imports/plugins/custom/mollie-reaction @mollie/reaction
   ```
-* Navigeer het dashboard van jouw Reaction Commerce webwinkel
+* Navigeer naar het dashboard van jouw Reaction Commerce webwinkel
 * Scroll naar het tabblad "Betalingen"
 * Schakel Mollie in
 * Voer uw API-key in en sla de gegevens op
