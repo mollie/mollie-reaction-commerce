@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { Button, Translation } from "/imports/plugins/core/ui/client/components";
+import { Button, Translation } from "@reactioncommerce/reaction-ui";
 
 class BankSelect extends Component {
   static propTypes = {

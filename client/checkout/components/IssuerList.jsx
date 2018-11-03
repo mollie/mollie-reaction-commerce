@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { Translation } from "/imports/plugins/core/ui/client/components";
+import { Translation } from "@reactioncommerce/reaction-ui";
 
 import BankSelect from "./BankSelect";
 import IdealQrImage from "../containers/IdealQrImageContainer";

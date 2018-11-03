@@ -4,7 +4,7 @@ import { Meteor } from "meteor/meteor";
 import _ from "lodash";
 
 import { Reaction } from "/client/api";
-import { Button } from "/imports/plugins/core/ui/client/components";
+import { Button } from "@reactioncommerce/reaction-ui";
 import { Packages } from "/lib/collections";
 
 import IssuerList from "../../checkout/containers/IssuerListContainer";

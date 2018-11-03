@@ -74,7 +74,7 @@ class MollieSettingsForm extends Component {
   };
 
   render() {
-    const { settings: { apiKey, methods, shopLocale, idealQr, issuerList, description } } = this.props;
+    const { settings: { apiKey, methods, shopLocale, idealQr, issuerList, description, payments } } = this.props;
 
     const shopLocaleOptions = [
         { value: false, label: i18next.t("admin.paymentSettings.doNotSendLocale") },

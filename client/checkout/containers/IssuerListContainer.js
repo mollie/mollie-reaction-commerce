@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 import _ from "lodash";
 
-import { composeWithTracker } from "/imports/plugins/core/components/lib";
+import { composeWithTracker } from "@reactioncommerce/reaction-components";
 
 import IssuerList from "../components/IssuerList";
 

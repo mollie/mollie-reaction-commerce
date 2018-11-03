@@ -10,8 +10,7 @@ import { Cart, Packages, Shops, Accounts } from "/lib/collections";
 
 import { MolliePayments, MollieQrCodes } from "../../collections";
 import { NAME } from "../../misc/consts";
-import Mollie from "../../lib/api/src/mollie";
-import { MollieApiMethod } from "../../lib/api/src/models";
+import Mollie from "@mollie/api-client";
 import { getMollieLocale } from "../../misc";
 
 /**
@@ -61,7 +60,7 @@ Meteor.methods({
 
           // Remove methods that are no longer available in the Mollie account
           _.remove(field.value, (item) => {
-            if (_.includes(["cartasi", "cartesbancaires"], item._id)) {
+            if (_.includes(["creditcard", "cartesbancaires"], item._id)) {
               return _.findIndex(methods, ["id", "creditcard"]) < 0; // Remove these methods when credit cards have been disabled
             }
 
@@ -134,7 +133,6 @@ Meteor.methods({
     check(issuer, Match.Maybe(String));
 
     const locale = Meteor.user().profile.lang;
-
     if (_.includes(["cartasi", "cartesbancaires"], method)) {
       method = "creditcard";
     }
@@ -224,7 +222,7 @@ Meteor.methods({
       });
 
       // Reserve the items in case we're dealing with a bank transfer
-      if (payment.method === MollieApiMethod.BANKTRANSFER) {
+      if (payment.method === "banktransfer") {
         Meteor.call("inventory/addReserve", _.get(cart, "items", []));
       }
 

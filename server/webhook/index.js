@@ -4,12 +4,12 @@ import { Random } from "meteor/random";
 import _ from "lodash";
 import util from "util";
 import { Reaction, Logger } from "/server/api";
+
 import { Packages, Cart, Orders } from "/lib/collections";
 
-import Mollie from "../../lib/api/src/mollie";
 import { MolliePayments, MollieQrCodes } from "../../collections";
 import { NAME } from "../../misc/consts";
-import { MollieApiMethod, MollieApiPayment } from "../../lib/api/src/models";
+import Mollie from "@mollie/api-client";
 
 const DDPCommon = Package["ddp-common"].DDPCommon;
 
@@ -71,7 +71,7 @@ const processWebhook = (req, res) => {
           bankStatus: molliePayment.status,
         },
       });
-      if (!_.includes([MollieApiPayment.STATUS_OPEN, MollieApiPayment.STATUS_PENDING])) {
+      if (!_.includes(["open", "pending"])) {
         MollieQrCodes.remove({
           transactionId: molliePayment.id,
         });
@@ -126,7 +126,7 @@ const processWebhook = (req, res) => {
             },
           });
         } else if (typeof order !== "undefined"
-          && molliePayment.method === MollieApiMethod.BANKTRANSFER
+          && molliePayment.method === "banktransfer"
           && (molliePayment.isExpired() || molliePayment.isCanceled())
         ) {
           // Release the previously reserved products because the bank transfer has expired
@@ -153,7 +153,7 @@ const processWebhook = (req, res) => {
 };
 
 // We are registering two endpoints, one is the regular and documented POST webhook call, the other is to make
-// it easier to run the webhook again. The user can just navigate to the webhook URL as displayed on the Mollie
+// it easier to run the webhook again. The merchant can just navigate to the webhook URL as displayed on the Mollie
 // dashboard.
 // Unfortunately, we are not able to parse the body of the call, since Reaction Commerce only registers a
 // JSON body parse during the core initialization, but by appending the Cart ID to the URL (`?cartId=tr_...`)

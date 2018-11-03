@@ -121,11 +121,13 @@ class MollieSettingsFormContainer extends Component {
   };
 
   render() {
+    const { packageData } = this.props;
+
     return (
       <MollieSettingsForm
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
-        initialSettings={_.pick(this.props.packageData.settings, ["apiKey", "methods"])}
+        initialSettings={_.pick(packageData.settings, ["apiKey", "methods"])}
         settings={this.state}
       />
     );
@@ -152,7 +154,7 @@ const composer = (props, onData) => {
       packageData: Packages.findOne({
         name: NAME,
         shopId: Reaction.getShopId(),
-      })
+      }),
     });
   }
 };

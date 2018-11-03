@@ -4,7 +4,7 @@ import _ from "lodash";
 
 import { Reaction } from "/client/api";
 import { Packages } from "/lib/collections"
-import { composeWithTracker } from "/imports/plugins/core/components/lib";
+import { composeWithTracker } from "@reactioncommerce/reaction-components";
 
 import MolliePaymentSelector from "../components/MolliePaymentSelector";
 import { NAME } from "../../../misc/consts";

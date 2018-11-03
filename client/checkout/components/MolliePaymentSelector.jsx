@@ -3,14 +3,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
-import { Shops } from "/lib/collections";
+import { Shops, Packages } from "/lib/collections";
 import { Reaction } from "/client/api";
-import { Packages } from "/lib/collections";
 
 import IssuerListModal from "./IssuerListModal";
 import { getPaymentIcon, getSupportedMethods } from "../../../misc";
 import { ISSUER_LIST_MODAL, ISSUER_LIST_PAGE, NAME } from "../../../misc/consts";
-import { MollieApiMethod } from "../../../lib/api/src/models";
+import Mollie from "@mollie/api-client";
 
 let packageData;
 
@@ -43,7 +42,7 @@ class MolliePaymentSelector extends Component {
         });
       } else {
         // Redirect to the payment screen
-        window.location.href = result;
+        // window.location.href = result;
       }
     });
   }
@@ -57,8 +56,9 @@ class MolliePaymentSelector extends Component {
       });
     }
 
-    if (method._id === MollieApiMethod.IDEAL) {
+    if (method._id === "ideal") {
       const issuerList = _.get(packageData, `settings.${NAME}.issuerList`);
+      console.log(issuerList);
       switch (issuerList) {
         case ISSUER_LIST_MODAL:
           return this.setState({ issuerListVisible: true});

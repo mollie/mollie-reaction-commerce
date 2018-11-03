@@ -1,13 +1,14 @@
-import Meteor from "meteor/meteor";
+import { Meteor } from "meteor/meteor";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Random } from "meteor/random";
 
 import { Packages } from "/lib/collections";
-import { Button } from "/imports/plugins/core/ui/client/components";
+import { Button } from "@reactioncommerce/reaction-ui";
 import IssuerList from "../containers/IssuerListContainer";
 import { Reaction } from "/client/api";
 import { NAME } from "../../../misc/consts";
+import _ from "lodash";
 
 class IssuerListModal extends Component {
   static propTypes = {
@@ -42,8 +43,7 @@ class IssuerListModal extends Component {
     window.addEventListener("resize", _.throttle(() => {
       self.setState({ width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth });
     }, 200));
-    try {
-      Meteor.wrapAsync(Meteor.subscribe("Packages", Reaction.getShopId()));
+    Meteor.subscribe("Packages", Reaction.getShopId(), () => {
       const packageData = Packages.findOne({
         name: NAME,
         shopId: Reaction.getShopId(),
@@ -51,8 +51,7 @@ class IssuerListModal extends Component {
       this.setState({
         name: _.get(_.find(_.get(packageData, `settings.${NAME}.methods`), item => item._id === "ideal"), "name", "iDEAL"),
       });
-    } catch (e) {
-    }
+    });
   }
 
   handleSubmit = () => {
