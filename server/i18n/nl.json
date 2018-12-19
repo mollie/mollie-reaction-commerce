@@ -1,0 +1,41 @@
+[{
+  "language": "Dutch",
+  "i18n": "nl",
+  "ns": "mollie",
+  "translation": {
+    "reaction-payments": {
+      "checkout": {
+        "issuers": {
+          "selectABank": "Selecteer een bank",
+          "or": "of",
+          "scanTheQrCode": "Scan de QR-code"
+        }
+      },
+      "payment": {
+        "paymentInitError": "Er is een fout opgetreden bij het initialiseren van de betaling."
+      },
+      "return": {
+        "welcomeBack": "Welkom terug!",
+        "notReceivedPaymentStatus": "Er is nog geen definitieve betaalstatus bekend. U wordt op de hoogte gesteld zodra de bank de status doorgeeft."
+      },
+      "admin": {
+        "paymentSettings": {
+          "mollieLabel": "Mollie",
+          "apiKeyMissing": "API key ontbreekt",
+          "noPaymentMethodsFound": "Geen betaalmethoden gevonden. Zorg ervoor dat de API-key juist is en u minstens één betaalmethode heeft ingeschakeld.",
+          "paymentMethods": "Betaalmethoden",
+          "shopLocalePaymentScreen": "Stuur locale voor betaalscherm",
+          "doNotSendLocale": "Stuur geen locale - gebruik browsertaal",
+          "sendLocale": "Stuur webwinkel locale",
+          "enableIdealQr": "iDEAL-QR inschakelen",
+          "description": "Beschrijving",
+          "enterADescriptionHere": "Vul hier een omschrijving in. Sommige betaalmethoden kunnen een karakterlimiet hebben; het is verstandig om 29 tekens of minder te gebruiken. U kunt hier de volgende variabelen gebruiken: {cart.id} {customer.name}",
+          "issuerList": "Bankenlijst",
+          "onClick": "Zichtbaar na klikken betaalmethode",
+          "ownPage": "Tonen op aparte pagina",
+          "paymentScreen": "Mollie betaalscherm"
+        }
+      }
+    }
+  }
+}]
