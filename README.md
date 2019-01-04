@@ -1,8 +1,7 @@
-[Nederlands](README_NL.md)
-
-![Mollie](https://www.mollie.com/files/Mollie-Logo-Style-Small.png)
-
-# Reaction Commmerce payment service provider [Mollie](https://www.mollie.com/). #
+<p align="center">
+  <img src="https://info.mollie.com/hubfs/github/reaction/logo.png" width="128" height="128"/>
+</p>
+<h1 align="center">Mollie for Reaction Commerce</h1>
 
 Download the [Mollie](https://www.mollie.com/) module for Reaction Commerce. Mollie is a payment service provider (PSP) which provides your online store with the most popular online payment methods. 
 
@@ -32,7 +31,7 @@ If you have no experience with this, then leave the installation of this module 
 
 * Clone this repository into the folder `/imports/plugins/custom/mollie-reaction`:
   ```shell
-  $ git clone https://github.com/mollie/reaction -b v1.0.0 imports/plugins/custom/mollie-reaction
+  $ git clone https://github.com/mollie/mollie-reaction-commerce -b v1.0.0 imports/plugins/custom/mollie-reaction
   ```
 * Go to the dashboard of your Reaction Commerce webshop
 * Scroll to the Payments tab
@@ -129,9 +128,9 @@ It is possible that Mollie could not reach your website or that your website cou
 
 # Would you like to help improve this module? #
 
-Would you like to help make this module for Reaction Commerce even better? We are always open to [pull requests](https://github.com/mollie/reaction/pulls?utf8=%E2%9C%93&q=is%3Apr).
+Would you like to help make this module for Reaction Commerce even better? We are always open to [pull requests](https://github.com/mollie/mollie-reaction-commerce/pulls?utf8=%E2%9C%93&q=is%3Apr).
 
-And how about working at a [technology driven organization](https://jobs.mollie.com/)? Mollie is always looking for developers and system engineers. [Check our vacancies](https://jobs.mollie.com/) or [contact us](mailto:personeel@mollie.com).
+And how about working at a [technology driven organization](https://jobs.mollie.com/)? Mollie is always looking for developers and system engineers. [Check our vacancies](https://jobs.mollie.com/) or [contact us](mailto:info@mollie.com).
 
 # License #
 [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).
