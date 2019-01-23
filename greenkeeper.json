@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "lib/axios/package.json",
+        "lib/follow-redirects/package.json"
+      ]
+    }
+  }
+}
