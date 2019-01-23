@@ -22,6 +22,8 @@ Download and install the Mollie Reaction Commerce payment module and start recei
 
 ## Made and maintained by [Snowy Cat Software](https://www.snowycatsoftware.com/). ##
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mollie/mollie-reaction-commerce.svg)](https://greenkeeper.io/)
+
 ## Compatible with Reaction Commerce 1.x ##
 
 **Please note:** SSH access to your web server could be required for the installation of this module.
