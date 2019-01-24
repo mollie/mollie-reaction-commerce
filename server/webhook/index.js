@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { Promise } from "meteor/promise";
 import { Random } from "meteor/random";
+import Mollie from "@mollie/api-client";
 import _ from "lodash";
 import util from "util";
 import { Reaction, Logger } from "/server/api";
@@ -9,7 +10,6 @@ import { Packages, Cart, Orders } from "/lib/collections";
 
 import { MolliePayments, MollieQrCodes } from "../../collections";
 import { NAME } from "../../misc/consts";
-import Mollie from "@mollie/api-client";
 
 const DDPCommon = Package["ddp-common"].DDPCommon;
 
@@ -57,14 +57,19 @@ const processWebhook = (req, res) => {
       // Get the payment
       let molliePayment;
       try {
-        molliePayment = Promise.await(mollie.payments.get(dbPayment.transactionId));
+        if (_.startsWith(dbPayment.transactionId, "ord_")) {
+          const mollieOrder = Promise.await(mollie.orders.get(dbPayment.transactionId, { embed: ["payments"] }));
+          molliePayment = mollieOrder._embedded.payments[0];
+        } else {
+          molliePayment = Promise.await(mollie.payments.get(dbPayment.transactionId));
+        }
       } catch (e) {
         Logger.error(JSON.stringify(util.inspect(e)));
         return;
       }
       // Set the new status in the database
       MolliePayments.update({
-        transactionId: molliePayment.id,
+        transactionId: dbPayment.transactionId,
         userId,
       }, {
         $set: {
@@ -73,7 +78,7 @@ const processWebhook = (req, res) => {
       });
       if (!_.includes(["open", "pending"])) {
         MollieQrCodes.remove({
-          transactionId: molliePayment.id,
+          transactionId: dbPayment.transactionId,
         });
       }
 
@@ -99,7 +104,7 @@ const processWebhook = (req, res) => {
             paymentPackageId: packageData._id,
             paymentSettingsKey: NAME,
             method: "credit",
-            transactionId: molliePayment.id,
+            transactionId: dbPayment.transactionId,
             amount: parseFloat(molliePayment.amount.value),
             status: "completed",
             mode: "capture",
@@ -116,9 +121,9 @@ const processWebhook = (req, res) => {
             cartId,
           });
 
-          // Attach the ne order ID to the new MolliePayment
+          // Attach the new order ID to the new MolliePayment
           MolliePayments.update({
-            transactionId: molliePayment.id,
+            transactionId: dbPayment.transactionId,
             userId,
           }, {
             $set: {

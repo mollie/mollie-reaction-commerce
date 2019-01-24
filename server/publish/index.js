@@ -14,10 +14,6 @@ Meteor.publish("mollie/methods/list", (shopId) => {
     shopId,
   }, {
     limit: 1,
-    fields: {
-      [`settings.${NAME}.methods`]: 1,
-      [`settings.${NAME}.api`]: 1,
-    },
   });
 });
 

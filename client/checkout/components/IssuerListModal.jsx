@@ -1,14 +1,14 @@
 import { Meteor } from "meteor/meteor";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
+import { Button } from "@reactioncommerce/reaction-ui";
 import { Random } from "meteor/random";
 
 import { Packages } from "/lib/collections";
-import { Button } from "@reactioncommerce/reaction-ui";
 import IssuerList from "../containers/IssuerListContainer";
 import { Reaction } from "/client/api";
-import { NAME } from "../../../misc/consts";
-import _ from "lodash";
+import { NAME, API_ORDERS, API_PAYMENTS } from "../../../misc/consts";
 
 class IssuerListModal extends Component {
   static propTypes = {
@@ -33,6 +33,7 @@ class IssuerListModal extends Component {
 
   state = {
     name: "iDEAL",
+    api: API_ORDERS,
     submit: false,
     width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
   };
@@ -49,7 +50,8 @@ class IssuerListModal extends Component {
         shopId: Reaction.getShopId(),
       });
       this.setState({
-        name: _.get(_.find(_.get(packageData, `settings.${NAME}.methods`), item => item._id === "ideal"), "name", "iDEAL"),
+        name: _.get(_.find(_.get(packageData, `settings.public.methods`), item => item._id === "ideal"), "name", "iDEAL"),
+        api: _.get(packageData, `settings.public.api`, API_PAYMENTS),
       });
     });
   }
@@ -68,7 +70,7 @@ class IssuerListModal extends Component {
 
   render() {
     const { isDisabled, isOpen, uniqueId, qrCode } = this.props;
-    const { submit, width, name } = this.state;
+    const { submit, width, name, api } = this.state;
 
     return (
       <div>
@@ -90,7 +92,7 @@ class IssuerListModal extends Component {
                 <div className="modal-body" style={{ backgroundColor: "#fff" }}>
                   <IssuerList
                     submit={submit}
-                    qrCode={qrCode && width >= 768}
+                    qrCode={qrCode && width >= 768 && api === API_PAYMENTS}
                   />
                 </div>
 

@@ -22,7 +22,7 @@ class MollieSettingsForm extends Component {
     onSubmit: () => {},
     initialSettings: {
       apiKey: "",
-      api: API_ORDERS,
+      api: API_PAYMENTS,
       methods: [],
       shopLocale: false,
       idealQr: false,
@@ -31,7 +31,7 @@ class MollieSettingsForm extends Component {
     },
     settings: {
       apiKey: "",
-      api: API_ORDERS,
+      api: API_PAYMENTS,
       methods: [],
       shopLocale: false,
       idealQr: false,
@@ -137,7 +137,7 @@ class MollieSettingsForm extends Component {
             />
           </div>}
 
-          <div className="rui multiselect form-group">
+          {api === API_PAYMENTS && <div className="rui multiselect form-group">
             <label>
               <Translation i18nKey="admin.paymentSettings.shopLocalePaymentScreen"/>
             </label>
@@ -147,7 +147,7 @@ class MollieSettingsForm extends Component {
               value={shopLocale}
               options={shopLocaleOptions}
             />
-          </div>
+          </div>}
 
           <div className="rui multiselect form-group">
             <label>

@@ -8,16 +8,16 @@ import { Packages } from "/lib/collections";
 import { Reaction, i18next } from "/client/api";
 
 import MollieSettingsForm from "../components/MollieSettingsForm";
-import { API_ORDERS, NAME } from "../../../misc/consts";
+import { API_PAYMENTS, NAME } from "../../../misc/consts";
 
 class MollieSettingsFormContainer extends Component {
   state = {
     apiKey: _.get(this.props, `packageData.settings.${NAME}.apiKey`, ""),
-    api: _.get(this.props, `packageData.settings.${NAME}.api`, API_ORDERS),
-    methods: _.get(this.props, `packageData.settings.${NAME}.methods`, []),
+    api: _.get(this.props, `packageData.settings.public.api`, API_PAYMENTS),
+    methods: _.get(this.props, `packageData.settings.public.methods`, []),
     shopLocale: _.get(this.props, `packageData.settings.${NAME}.shopLocale`, []),
-    idealQr: _.get(this.props, `packageData.settings.${NAME}.idealQr`, []),
-    issuerList: _.get(this.props, `packageData.settings.${NAME}.issuerList`, []),
+    idealQr: _.get(this.props, `packageData.settings.public.idealQr`, []),
+    issuerList: _.get(this.props, `packageData.settings.public.issuerList`, []),
     description: _.get(this.props, `packageData.settings.${NAME}.description`, "Cart %"),
   };
 
@@ -26,7 +26,7 @@ class MollieSettingsFormContainer extends Component {
   };
   
   componentWillReceiveProps(newProps) {
-    const methods = _.get(newProps, `packageData.settings.${NAME}.methods`);
+    const methods = _.get(newProps, `packageData.settings.public.methods`);
     if (!_.isEmpty(methods)) {
       this.setState({
         methods,

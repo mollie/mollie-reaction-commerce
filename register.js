@@ -1,6 +1,6 @@
 /* eslint camelcase: 0 */
 import { Reaction } from "/server/api";
-import { ISSUER_LIST_MODAL } from "./misc/consts";
+import { ISSUER_LIST_MODAL, API_PAYMENTS } from "./misc/consts";
 
 Reaction.registerPackage({
   label: "Mollie",
@@ -8,23 +8,21 @@ Reaction.registerPackage({
   icon: "fa fa-credit-card-alt",
   autoEnable: true,
   settings: {
-    apiKey: "",
-    methods: [],
-    supports: [
-      "Authorize",
-    ],
+    public: {
+      methods: [],
+      api: API_PAYMENTS,
+      idealQr: false,
+      issuerList: ISSUER_LIST_MODAL,
+    },
     "mollie": {
       enabled: false,
       apiKey: "",
-      methods: [],
       support: [
         "Authorize",
         "Capture",
         "Refund",
       ],
       shopLocale: false,
-      idealQr: false,
-      issuerList: ISSUER_LIST_MODAL,
       description: "Cart %",
     },
   },

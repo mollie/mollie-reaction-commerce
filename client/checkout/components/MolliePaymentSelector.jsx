@@ -57,8 +57,7 @@ class MolliePaymentSelector extends Component {
     }
 
     if (method._id === "ideal") {
-      const issuerList = _.get(packageData, `settings.${NAME}.issuerList`);
-      console.log(issuerList);
+      const issuerList = _.get(packageData, `settings.public.issuerList`);
       switch (issuerList) {
         case ISSUER_LIST_MODAL:
           return this.setState({ issuerListVisible: true});
@@ -96,7 +95,7 @@ class MolliePaymentSelector extends Component {
       <div>
         <IssuerListModal
           isOpen={issuerListVisible}
-          qrCode={_.get(packageData, `settings.${NAME}.idealQr`, false)}
+          qrCode={_.get(packageData, `settings.public.idealQr`, false)}
           onCancel={() => this.setState({ issuerListVisible: false })}
         />
         {availableMethods.map((method) => (

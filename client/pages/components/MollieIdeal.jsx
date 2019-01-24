@@ -42,7 +42,7 @@ export default class MollieIdeal extends Component {
         });
       }
       this.setState({
-        name: _.get(_.find(_.get(packageData, `settings.${NAME}.methods`), item => item._id === "ideal"), "name", "iDEAL"),
+        name: _.get(_.find(_.get(packageData, `settings.public.methods`), item => item._id === "ideal"), "name", "iDEAL"),
       });
     } catch (e) {
     }
@@ -85,7 +85,7 @@ export default class MollieIdeal extends Component {
           <div style={{ backgroundColor: "inherit" }}>
             <IssuerList
               submit={submit}
-              qrCode={_.get(packageData, `settings.${NAME}.idealQr`, false) && width >= 768}
+              qrCode={_.get(packageData, `settings.public.idealQr`, false) && width >= 768}
               onSubmit={this.handleSubmit}
               onCancel={this.handleCancel}
             />
