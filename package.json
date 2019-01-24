@@ -22,6 +22,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Trendweb.io <info@trendweb.io>",
+  "dependencies": {
+    "@mollie/api-client": "git+https://git@github.com/firstred/mollie-api-node.git#typescript-deploy"
+  },
   "babel": {
     "plugins": [
       "transform-class-properties",
@@ -49,11 +52,7 @@
             "@reactioncommerce/reaction-graphql-utils": "./imports/plugins/core/graphql/server/resolvers/util",
             "@reactioncommerce/reaction-graphql-xforms": "./imports/plugins/core/graphql/server/resolvers/xforms",
             "@reactioncommerce/reaction-router": "./imports/plugins/core/router/lib",
-            "@reactioncommerce/reaction-ui": "./imports/plugins/core/ui/client/components",
-            "@mollie/api-client": "./imports/plugins/custom/mollie-reaction/lib/api/src/mollie",
-            "axios": "./imports/plugins/custom/mollie-reaction/lib/axios/axios",
-            "qs": "./imports/plugins/custom/mollie-reaction/lib/qs/",
-            "follow-redirects": "./imports/plugins/custom/mollie-reaction/lib/follow-redirects"
+            "@reactioncommerce/reaction-ui": "./imports/plugins/core/ui/client/components"
           }
         }
       ]
