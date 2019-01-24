@@ -31,7 +31,7 @@ If you have no experience with this, then leave the installation of this module 
 
 * Install this module into the folder `/imports/plugins/custom/mollie-reaction` from the root directory:
   ```shell
-  $ npm install --prefix ./imports/plugins/custom/mollie-reaction @mollie/reaction
+  $ npm install --prefix ./imports/plugins/custom/mollie-reaction @mollie/reaction-commerce
   ```
 * Go to the dashboard of your Reaction Commerce webshop
 * Scroll to the Payments tab
