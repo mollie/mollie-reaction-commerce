@@ -7,7 +7,7 @@ import { TextField, Translation, Select } from "/imports/plugins/core/ui/client/
 import Checkbox from "./Checkbox";
 
 import MolliePaymentTagList from "./MolliePaymentTagList";
-import { ISSUER_LIST_MODAL, ISSUER_LIST_PAGE, ISSUER_LIST_MOLLIE } from "../../../misc/consts";
+import { ISSUER_LIST_MODAL, ISSUER_LIST_PAGE, ISSUER_LIST_MOLLIE, API_ORDERS, API_PAYMENTS } from "../../../misc/consts";
 
 class MollieSettingsForm extends Component {
   static propTypes = {
@@ -22,6 +22,7 @@ class MollieSettingsForm extends Component {
     onSubmit: () => {},
     initialSettings: {
       apiKey: "",
+      api: API_ORDERS,
       methods: [],
       shopLocale: false,
       idealQr: false,
@@ -30,6 +31,7 @@ class MollieSettingsForm extends Component {
     },
     settings: {
       apiKey: "",
+      api: API_ORDERS,
       methods: [],
       shopLocale: false,
       idealQr: false,
@@ -44,16 +46,20 @@ class MollieSettingsForm extends Component {
     }
   }
 
-  onApiKeyChange = (e) => {
-    this.props.onChange("apiKey", e);
+  onApiKeyChange = (event) => {
+    this.props.onChange("apiKey", event);
+  };
+
+  onApiChange = (api) => {
+    this.props.onChange("api", api);
   };
 
   onMethodsChange = (methods) => {
     this.props.onChange("methods", methods);
   };
 
-  onShopLocaleChange = (event) => {
-    this.props.onChange("shopLocale", event);
+  onShopLocaleChange = (locale) => {
+    this.props.onChange("shopLocale", locale);
   };
 
   onIssuerListchange = (event) => {
@@ -74,7 +80,12 @@ class MollieSettingsForm extends Component {
   };
 
   render() {
-    const { settings: { apiKey, methods, shopLocale, idealQr, issuerList, description, payments } } = this.props;
+    const { settings: { apiKey, api, methods, shopLocale, idealQr, issuerList, description } } = this.props;
+
+    const apiOptions = [
+      { value: API_PAYMENTS, label: "Payments API" },
+      { value: API_ORDERS, label: "Orders API" },
+    ];
 
     const shopLocaleOptions = [
         { value: false, label: i18next.t("admin.paymentSettings.doNotSendLocale") },
@@ -99,6 +110,16 @@ class MollieSettingsForm extends Component {
             value={apiKey}
           />
 
+          <div className="rui multiselect form-group">
+            <label>API</label>
+            <Select
+              searchable={false}
+              onChange={this.onApiChange}
+              value={api}
+              options={apiOptions}
+            />
+          </div>
+
           <MolliePaymentTagList
             data-i18n="settings.paymentMethods"
             label={i18next.t("admin.paymentSettings.paymentMethods")}
@@ -106,7 +127,7 @@ class MollieSettingsForm extends Component {
             methods={methods}
           />
 
-          <div className="rui form-group">
+          {api === API_PAYMENTS && <div className="rui form-group">
             <Checkbox
               className="checkbox-switch"
               label="Enable iDEAL QR codes"
@@ -114,7 +135,7 @@ class MollieSettingsForm extends Component {
               checked={idealQr}
               onChange={this.onIdealQrChange}
             />
-          </div>
+          </div>}
 
           <div className="rui multiselect form-group">
             <label>
@@ -140,7 +161,7 @@ class MollieSettingsForm extends Component {
             />
           </div>
 
-          <TextField
+          {api === API_PAYMENTS && <TextField
             label="Description"
             i18nKeyLabel="admin.paymentSettings.description"
             name="cartDescription"
@@ -149,7 +170,7 @@ class MollieSettingsForm extends Component {
             value={description}
             helpText="Enter a description here. Note: Payment methods may have a character limit, best keep the description under 29 characters."
             i18nKeyHelpText="admin.paymentSettings.enterADescriptionHere"
-          />
+          />}
 
           <button className="btn btn-primary pull-right" type="submit">
             <Translation i18nKey="app.saveChanges"/>

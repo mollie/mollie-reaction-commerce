@@ -8,16 +8,17 @@ import { Packages } from "/lib/collections";
 import { Reaction, i18next } from "/client/api";
 
 import MollieSettingsForm from "../components/MollieSettingsForm";
-import { NAME } from "../../../misc/consts";
+import { API_ORDERS, NAME } from "../../../misc/consts";
 
 class MollieSettingsFormContainer extends Component {
   state = {
     apiKey: _.get(this.props, `packageData.settings.${NAME}.apiKey`, ""),
+    api: _.get(this.props, `packageData.settings.${NAME}.api`, API_ORDERS),
     methods: _.get(this.props, `packageData.settings.${NAME}.methods`, []),
     shopLocale: _.get(this.props, `packageData.settings.${NAME}.shopLocale`, []),
     idealQr: _.get(this.props, `packageData.settings.${NAME}.idealQr`, []),
     issuerList: _.get(this.props, `packageData.settings.${NAME}.issuerList`, []),
-    description: _.get(this.props, `packageData.settings.${NAME}.description`, []),
+    description: _.get(this.props, `packageData.settings.${NAME}.description`, "Cart %"),
   };
 
   static propTypes = {
@@ -37,6 +38,8 @@ class MollieSettingsFormContainer extends Component {
     switch (key) {
       case "apiKey":
         return this.handleApiKeyChange(value);
+      case "api":
+        return this.handleApiChange(value);
       case "methods":
         return this.handleMethodsChange(value);
       case "shopLocale":
@@ -52,6 +55,10 @@ class MollieSettingsFormContainer extends Component {
 
   handleApiKeyChange = ({ target: { value: apiKey }}) => {
     this.setState({ apiKey });
+  };
+
+  handleApiChange = (api) => {
+    this.setState({ api });
   };
 
   handleMethodsChange = (methods) => {
@@ -75,7 +82,7 @@ class MollieSettingsFormContainer extends Component {
   };
 
   handleSubmit = () => {
-    const { apiKey, methods, shopLocale, idealQr, issuerList, description } = _.cloneDeep(this.state);
+    const { apiKey, api, methods, shopLocale, idealQr, issuerList, description } = _.cloneDeep(this.state);
     const { _id: packageId } = _.get(this.props, "packageData", { _id: false });
     if (!packageId) {
       return Alerts.toast(i18next.t("admin.settings.saveFailed", { ns: "mollie" }), "error");
@@ -85,6 +92,10 @@ class MollieSettingsFormContainer extends Component {
       {
         property: "apiKey",
         value: apiKey,
+      },
+      {
+        property: "api",
+        value: api,
       },
       {
         property: "methods",
