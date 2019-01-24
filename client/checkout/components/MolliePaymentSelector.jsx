@@ -42,7 +42,7 @@ class MolliePaymentSelector extends Component {
         });
       } else {
         // Redirect to the payment screen
-        // window.location.href = result;
+        window.location.href = result;
       }
     });
   }
