@@ -5,7 +5,7 @@ import _ from "lodash";
 
 import { composeWithTracker } from "/imports/plugins/core/components/lib/composer";
 import { Packages } from "/lib/collections";
-import { Reaction, i18next } from "/client/api";
+import { i18next, Reaction } from "/client/api";
 
 import MollieSettingsForm from "../components/MollieSettingsForm";
 import { API_PAYMENTS, NAME } from "../../../misc/consts";

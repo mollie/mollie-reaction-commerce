@@ -4,7 +4,7 @@ import _ from 'lodash';
 import util from "util";
 
 import { Packages } from "lib/collections";
-import { Reaction, Logger } from "server/api";
+import { Logger, Reaction } from "server/api";
 import { NAME } from "../misc/consts";
 import { MolliePayments } from "../collections";
 

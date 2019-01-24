@@ -1,6 +1,6 @@
 import { Meteor } from "meteor/meteor";
 
-import { Packages, Cart } from "/lib/collections";
+import { Cart, Packages } from "/lib/collections";
 
 import { NAME } from "../../misc/consts";
 import { check, Match } from "meteor/check";

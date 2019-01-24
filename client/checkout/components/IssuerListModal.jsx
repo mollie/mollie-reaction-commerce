@@ -8,7 +8,7 @@ import { Random } from "meteor/random";
 import { Packages } from "/lib/collections";
 import IssuerList from "../containers/IssuerListContainer";
 import { Reaction } from "/client/api";
-import { NAME, API_ORDERS, API_PAYMENTS } from "../../../misc/consts";
+import { API_ORDERS, API_PAYMENTS, NAME } from "../../../misc/consts";
 
 class IssuerListModal extends Component {
   static propTypes = {

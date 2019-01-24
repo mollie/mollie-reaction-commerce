@@ -3,13 +3,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
-import { Shops, Packages } from "/lib/collections";
+import { Packages, Shops } from "/lib/collections";
 import { Reaction } from "/client/api";
 
 import IssuerListModal from "./IssuerListModal";
 import { getPaymentIcon, getSupportedMethods } from "../../../misc";
 import { ISSUER_LIST_MODAL, ISSUER_LIST_PAGE, NAME } from "../../../misc/consts";
-import Mollie from "@mollie/api-client";
 
 let packageData;
 
